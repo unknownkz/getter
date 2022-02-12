@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  linter:
+    name: Run linting and format code
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+      matrix:
+        python-version: [3.9.x]
+    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          pip3 install -r requirements.txt
+          pip3 install -r requirements-dev.txt
+          
+      - name: Linting and format code
+        run: python3 -m run --lint
+          
+      - name: Beautify shell scripts
+        uses: illvart/beautysh-action@latest
+        with:
+          args: '*.sh --indent-size 2 &>/dev/null'
+          
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_user_name: notudope
+          commit_user_email: notudope@gmail.com
+          commit_author: notudope <notudope@gmail.com>
+          commit_message: '[auto] ci: apply changes'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Check for install script errors
+        uses: ludeeus/action-shellcheck@1.1.0
