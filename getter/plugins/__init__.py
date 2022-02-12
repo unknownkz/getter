@@ -37,6 +37,7 @@ NOSPAM_CHAT = [
     -1001221450384,  # @pyrogramlounge
     -1001109500936,  # @TelethonChat
     -1001471736013,  # @TelegrafJSChat
+    -1001185324811,  # @pytgcallschat
     -1001050982793,  # @Python
     -1001256902287,  # @DurovsChat
     -1001235155926,  # @RoseSupportChat
@@ -48,7 +49,6 @@ NOSPAM_CHAT = [
     -1001360494801,  # @OFIOpenChat
     -1001435671639,  # @xfichat
     -1001421589523,  # @tdspya
-    -1001596433756,  # @MFIChat
     -1001052242766,  # @pythonID
     -1001294181499,  # @userbotindo
     -1001109837870,  # @TelegramBotIndonesia
@@ -56,7 +56,13 @@ NOSPAM_CHAT = [
     -1001451324102,  # @Ultroidspam
     -1001481357570,  # @usergeot
     -1001465749479,  # @UserGeSpam
+    -1001596433756,  # @MFIChat
+    -1001180648994,  # @FSGOpenChat
     -1001699144606,  # @kastaoot
+    -1001700971911,  # @GetterUpdater
+    -1001776850404,  # @MetaUpdater
+    -1001307868573,  # @caritemanok
+    -1001261461928,  # @temanrandomchatt
 ]
 
 
