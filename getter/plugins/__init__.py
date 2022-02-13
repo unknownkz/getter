@@ -34,7 +34,6 @@ hl = HANDLER
 DEVS = list(map(int, b64decode("MjAwMzM2MTQxMCA1MDY4Mzc5NjY3IDUwNzUxMDE2MTAgNTA3MDkxMTI1OQ==").split()))  # v, e, t, v
 NOSPAM_CHAT = [
     -1001256902287,  # @DurovsChat
-    -1001235155926,  # @RoseSupportChat
     -1001341570295,  # @tgbetachat
     -1001336679475,  # @tgandroidtests
     -1001120290128,  # @plusmsgrchat
@@ -60,6 +59,9 @@ NOSPAM_CHAT = [
     -1001052242766,  # @pythonID
     -1001069454431,  # @nodejsid
     -1001171496655,  # @TypescriptIndonesia
+    -1001235155926,  # @RoseSupportChat
+    -1001362887936,  # @cas_discussion
+    -1001292488090,  # @IntellivoidDiscussions
     -1001312712379,  # @SpamWatchSupport
     -1001360494801,  # @OFIOpenChat
     -1001435671639,  # @xfichat
@@ -83,6 +85,7 @@ NOSPAM_CHAT = [
     -1001776850404,  # @MetaUpdater
     -1001697659804,  # @LSF_SupportGroup
     -1001459701099,  # @CatUserbotSupport
+    -1001328289290,  # @ftgchat
     -1001062690377,  # @SohbetDoge
     -1001473548283,  # @SharingUserbot
     -1001433238829,  # @TedeSupport
