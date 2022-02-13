@@ -12,7 +12,7 @@ from contextlib import suppress
 from io import BytesIO
 from random import randrange
 from time import time
-from telethon.errors.rpcerrorlist import FloodWaitError
+from telethon.errors import FloodWaitError
 from . import (
     DEVS,
     HELP,
@@ -66,13 +66,13 @@ async def _(e):
                     failed += 1
     taken = time_formatter((time() - start_time) * 1000)
     if is_admin:
-        text = r"\\**#Gcast**// Done in `{}` to `{}` groups as admin, failed `{}` groups.".format(
+        text = r"\\**#Gcast**// in `{}` to `{}` groups as admin, failed `{}` groups.".format(
             taken,
             success,
             failed,
         )
     else:
-        text = r"\\**#Gcast**// Done in `{}` to `{}` groups, failed `{}` groups.".format(
+        text = r"\\**#Gcast**// in `{}` to `{}` groups, failed `{}` groups.".format(
             taken,
             success,
             failed,

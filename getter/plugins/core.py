@@ -217,7 +217,6 @@ async def _(e):
                             ),
                             parse_mode="html",
                         )
-                        await sleep(randrange(4, 6))
                     except (
                         UserAlreadyParticipantError,
                         UserNotMutualContactError,
