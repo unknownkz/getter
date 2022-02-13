@@ -63,6 +63,13 @@ NOSPAM_CHAT = [
     -1001776850404,  # @MetaUpdater
     -1001307868573,  # @caritemanok
     -1001261461928,  # @temanrandomchatt
+    -1001459701099,  # @CatUserbotSupport
+    -1001062690377,  # @SohbetDoge
+    -1001473548283,  # @SharingUserbot
+    -1001209432070,  # @GeezSupportGroup
+    -1001433238829,  # @TedeSupport
+    -1001419516987,  # @VeezSupportGroup
+    -1001752592753,  # @Skyzusupport
 ]
 
 
