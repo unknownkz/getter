@@ -92,8 +92,8 @@ NOSPAM_CHAT = [
     -1001476936696,  # @AnosSupport
     -1001752592753,  # @skyzusupport
     -1001788983303,  # @KayzuSupport
-    -1001307868573,  # @caritemanok
-    -1001261461928,  # @temanrandomchatt
+    -1001575341991,  # @KyuraSupport
+    -1001578091827,  # @PrimeSupportGroup
 ]
 
 
