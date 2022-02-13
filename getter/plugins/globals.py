@@ -101,7 +101,7 @@ HELP.update(
 • `{i}gadmincast <text/reply>`
 ↳ : Same as above, but only in your admin groups.
 
-**Don't be an idiot, DWYOR ~ Do With Your Own Risk!**
+**DWYOR ~ Do With Your Own Risk!**
 """,
         ]
     }

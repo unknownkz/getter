@@ -191,8 +191,7 @@ async def _(e):
     await e.eor(
         f"""
 • **Repo**: [GitHub](https://github.com/kastaid/getter)
-• **Deploy**: [Heroku](https://kasta.vercel.app/getter)
-• **STRING_SESSION**: [@strgen_bot](https://t.me/strgen_bot)
+• **Deploy**: [View at @kastaid](https://t.me/kastaid/9)
 """,
     )
 

@@ -35,11 +35,11 @@ async def _(e):
             plugins += f"<code>{str(p)}</code>  |  "
         plugins = plugins[:-3]
         text = f"""👤 <b>Owner</b>: <code>{display_name(me)} ({me.id})</code>
-🤖 <b>Version</b>: <code>v{__version__}</code>
+🤖 <b>Getter Version</b>: <code>v{__version__}</code>
 📦 <b>Plugins</b>: <code>{len(HELP)}</code>
 📚 <b>Usage</b>: <code>{hl}help &lt;plugin name&gt;</code>
 
-<b>All plugins and their commands:</b>
+<b>All plugins and their commands</b>:
 {plugins}
 
 ~ @kastaid"""
