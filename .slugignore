@@ -8,3 +8,4 @@ setup.cfg
 .editorconfig
 .deepsource.toml
 *.env
+session.py
