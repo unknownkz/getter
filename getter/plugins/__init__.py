@@ -90,13 +90,14 @@ NOSPAM_CHAT = [
     -1001473548283,  # @SharingUserbot
     -1001433238829,  # @TedeSupport
     -1001688172956,  # @Kekiniangroup
-    -1001209432070,  # @GeezSupportGroup
+    -1001459812644,  # @GeezSupport
     -1001419516987,  # @VeezSupportGroup
     -1001476936696,  # @AnosSupport
     -1001752592753,  # @skyzusupport
     -1001788983303,  # @KayzuSupport
     -1001575341991,  # @KyuraSupport
     -1001578091827,  # @PrimeSupportGroup
+    -1001380293847,  # @NastySupport
 ]
 
 
