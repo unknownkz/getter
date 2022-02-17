@@ -11,7 +11,6 @@ from asyncio import Lock, sleep
 from contextlib import suppress
 from csv import reader as csv_read
 from datetime import datetime, timezone
-from os import path
 from random import randrange
 from time import time
 from aiocsv import AsyncDictReader, AsyncWriter
@@ -40,6 +39,7 @@ from . import (
     HELP,
     StartTime,
     __version__,
+    Root,
     display_name,
     eor,
     eod,
@@ -172,6 +172,9 @@ async def get_groupinfo(e, m, group=1):
     pattern="cinvite(?: |$)(.*)",
 )
 async def _(e):
+    is_devs = True if not (hasattr(e, "out") and e.out) else False
+    if is_devs and e.client.uid in DEVS:
+        return
     if INVITING_LOCK.locked():
         await eod(e, "`Please wait until previous INVITE finished !!`", time=5, silent=True)
         return
@@ -264,7 +267,7 @@ async def _(e):
         admins_file = "admins_list.csv"
         bots_file = "bots_list.csv"
         await Kst.edit("`Scraping Members...`")
-        members_exist = True if is_append and path.exists(members_file) else False
+        members_exist = True if is_append and (Root / members_file).exists() else False
         if members_exist:
             rows = [int(x[0]) for x in csv_read(open(members_file, "r", encoding="utf-8")) if str(x[0]).isdigit()]
             members = len(rows)

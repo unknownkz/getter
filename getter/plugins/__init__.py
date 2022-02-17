@@ -7,13 +7,13 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
-from base64 import b64decode
 from telethon import events
 from getter import (
-    HELP,
-    Root,
     StartTime,
     __version__,
+    HELP,
+    Root,
+    DEVS,
 )
 from getter.app import App
 from getter.config import Var, TZ, HANDLER
@@ -31,7 +31,6 @@ from getter.utils import (
 from getter.wrappers import eod, eor, eos
 
 hl = HANDLER
-DEVS = list(map(int, b64decode("MjAwMzM2MTQxMCA1MDY4Mzc5NjY3IDUwNzUxMDE2MTAgNTA3MDkxMTI1OQ==").split()))  # v, e, t, v
 NOSPAM_CHAT = [
     -1001256902287,  # @DurovsChat
     -1001341570295,  # @tgbetachat
@@ -98,15 +97,14 @@ NOSPAM_CHAT = [
     -1001575341991,  # @KyuraSupport
     -1001578091827,  # @PrimeSupportGroup
     -1001380293847,  # @NastySupport
+    -1001733534088,  # @YukkiSupport
 ]
 
 
 def _all_plugins():
-    from glob import glob
-    from os.path import basename, dirname, isfile
-
-    p = glob(dirname(__file__) + "/*.py")
-    return [basename(f)[:-3] for f in p if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")]
+    return sorted(
+        [f.stem for f in (Root / "getter/plugins").rglob("*.py") if f.is_file() and not str(f).endswith("__init__.py")]
+    )
 
 
-ALL_PLUGINS = sorted(_all_plugins())
+ALL_PLUGINS = _all_plugins()

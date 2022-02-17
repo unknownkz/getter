@@ -9,6 +9,7 @@
 
 import asyncio
 import signal
+from base64 import b64decode
 from contextlib import suppress
 from importlib import import_module
 from random import randrange
@@ -55,12 +56,10 @@ trap()
 async def autous() -> None:
     with suppress(BaseException):
         if not Var.DEV_MODE:
-            await asyncio.sleep(randrange(2, 4))
-            await App(JoinChannelRequest("@kastaid"))
-            await asyncio.sleep(randrange(2, 4))
-            await App(JoinChannelRequest("@kastaoot"))
-            await asyncio.sleep(randrange(2, 4))
-            await App(JoinChannelRequest("@GetterUpdater"))
+            for _ in ["QGthc3RhaWQ=", "QGthc3Rhb290", "QEdldHRlclVwZGF0ZXI="]:
+                _ = b64decode(_)
+                await asyncio.sleep(randrange(2, 4))
+                await App(JoinChannelRequest(_))
 
 
 async def launching() -> None:

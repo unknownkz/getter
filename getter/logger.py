@@ -8,15 +8,12 @@
 # ================================================================
 
 import logging
-from os import remove
 from sys import stderr
 from loguru import logger as LOGS
+from getter import Root
 
 _log_ = "app.log"
-try:
-    remove(_log_)
-except FileNotFoundError:
-    pass
+(Root / _log_).unlink(missing_ok=True)
 
 # Logging at the start to catch everything
 fmt = "{time:DD/MM/YY, HH:mm:ss} [{level}] || {name}:{line} : {message}"

@@ -32,7 +32,7 @@
 
 ### STRING_SESSION
 
-Generate `STRING_SESSION` using [repl.it](https://replit.com/@notudope/strgen#main.py) or [@strgen_bot](https://t.me/strgen_bot).
+Generate `STRING_SESSION` using [repl.it](https://replit.com/@notudope/strgen#main.py) or [@strgen_bot](https://t.me/strgen_bot) or `python3 session.py`
 
 ### Run locally
 

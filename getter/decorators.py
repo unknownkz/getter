@@ -30,7 +30,7 @@ from telethon.errors import (
     MessageIdInvalidError,
     MessageNotModifiedError,
 )
-from getter import CMD_LIST, __version__
+from getter import __version__, CMD_LIST
 from .app import App
 from .config import HANDLER
 from .logger import LOGS

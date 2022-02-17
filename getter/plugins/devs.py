@@ -10,12 +10,7 @@
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
-from os import (
-    execl,
-    name,
-    remove,
-    system,
-)
+from os import execl, name, system
 from random import randrange
 from sys import executable
 from time import time
@@ -25,6 +20,7 @@ from . import (
     DEVS,
     HELP,
     StartTime,
+    Root,
     Var,
     hl,
     eor,
@@ -53,7 +49,7 @@ async def heroku_logs(m):
         force_document=True,
         allow_cache=False,
     )
-    remove("app-heroku.log")
+    (Root / "app-heroku.log").unlink(missing_ok=True)
     await m.try_delete()
 
 
@@ -90,11 +86,11 @@ async def _(e):
 @kasta_cmd(disable_errors=True, pattern="logs?(?: |$)(.*)")
 @kasta_cmd(disable_errors=True, own=True, senders=DEVS, pattern="clogs?(?: |$)(.*)")
 async def _(e):
+    is_devs = True if not (hasattr(e, "out") and e.out) else False
     with suppress(BaseException):
         opt = e.pattern_match.group(1)
-        is_incoming = True if not (hasattr(e, "out") and e.out) else False
         Kst = await e.eor("`Getting...`", silent=True)
-        if is_incoming:
+        if is_devs:
             await sleep(randrange(4, 6))
         if opt in ["heroku", "h"]:
             await heroku_logs(Kst)

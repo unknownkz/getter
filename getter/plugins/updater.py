@@ -9,7 +9,7 @@
 
 from asyncio import Lock, sleep
 from contextlib import suppress
-from os import execl, remove
+from os import execl
 from random import randrange
 from sys import executable
 from git import Repo
@@ -52,8 +52,7 @@ async def print_changelogs(Kst, ac_br, changelog):
         with open(file, "w+") as f:
             f.write(text)
         await Kst.reply(file=file, silent=True)
-        with suppress(BaseException):
-            remove(file)
+        (Root / file).unlink(missing_ok=True)
     else:
         await Kst.edit(text)
 
@@ -105,19 +104,21 @@ async def pushing(Kst, repo, ups_rem, ac_br, txt):
 @kasta_cmd(pattern="update(?: |$)(now|deploy|pull|push|one|all)?(?: |$)(.*)")
 @kasta_cmd(own=True, senders=DEVS, pattern="getterup(?: |$)(now|deploy|pull|push|one|all)?(?: |$)(.*)")
 async def _(e):
+    is_devs = True if not (hasattr(e, "out") and e.out) else False
+    if is_devs and e.client.uid in DEVS:
+        return
     if UPDATE_LOCK.locked():
         await eod(e, "`Please wait until previous UPDATE finished !!`", time=5, silent=True)
         return
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        is_incoming = True if not (hasattr(e, "out") and e.out) else False
         force_update = is_deploy = is_now = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
             is_now = True
-        if is_incoming and opt:
+        if is_devs and opt:
             user_id = version = None
             try:
                 user_id = int(opt)
@@ -128,7 +129,7 @@ async def _(e):
             if not user_id and version == __version__:
                 return
         Kst = await eor(e, "`Fetching...`", silent=True)
-        if is_incoming:
+        if is_devs:
             await sleep(randrange(2, 4))
         """
         if is_deploy:
@@ -163,7 +164,7 @@ async def _(e):
         ups_rem = repo.remote("upstream")
         ups_rem.fetch(ac_br)
         if is_deploy:
-            if is_incoming:
+            if is_devs:
                 await sleep(randrange(4, 6))
             await Kst.edit("`Deploying, please wait...`")
             await pushing(Kst, repo, ups_rem, ac_br, txt)
