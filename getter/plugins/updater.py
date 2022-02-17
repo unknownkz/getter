@@ -29,7 +29,6 @@ from . import (
 )
 
 UPDATE_LOCK = Lock()
-requirements = Root / "requirements.txt"
 off_repo = "https://github.com/kastaid/getter"
 help_text = f"""
 `{hl}update <now|pull|one>` for temporary update as locally.
@@ -37,32 +36,32 @@ help_text = f"""
 """
 
 
-async def gen_chlog(repo, diff):
+def gen_chlog(repo, diff):
+    ac_br = repo.active_branch.name
+    ch_log = ""
+    ch = f"<b>Getter v{__version__} updates for <a href={off_repo}/tree/{ac_br}>[{ac_br}]</a>:</b>"
     d_form = "%d/%m/%y || %H:%M"
-    return "".join(
-        f" • {c.summary} ({c.committed_datetime.strftime(d_form)}) <{c.author}>\n" for c in repo.iter_commits(diff)
-    )
+    for c in repo.iter_commits(diff):
+        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={off_repo.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
+    if ch_log:
+        return str(ch + ch_log)
+    return ch_log
 
 
-async def print_changelogs(Kst, ac_br, changelog):
-    text = f"**New UPDATE available for [{ac_br}]:\n\nCHANGELOG:**\n`{changelog}`"
+async def print_changelogs(Kst, changelog):
     file = "changelog_output.txt"
-    if len(text) > 4096:
+    if len(changelog) > 4096:
         await Kst.edit("View the file to see it.")
         with open(file, "w+") as f:
-            f.write(text)
+            f.write(changelog)
         await Kst.reply(file=file, silent=True)
         (Root / file).unlink(missing_ok=True)
     else:
-        await Kst.edit(text)
+        await Kst.edit(changelog, parse_mode="html")
 
 
-async def pulling(Kst, repo, ups_rem, ac_br):
-    try:
-        ups_rem.pull(ac_br)
-    except GitCommandError:
-        repo.git.reset("--hard", "FETCH_HEAD")
-    await runner("pip3 install --no-cache-dir -r requirements.txt")
+async def pulling(Kst):
+    await runner("git pull -f && pip3 install -r requirements.txt")
     await eod(Kst, "`[PULL] Update Successfully, Rebooting... Wait for a minute!`")
     execl(executable, executable, "-m", "getter")
     return
@@ -70,7 +69,7 @@ async def pulling(Kst, repo, ups_rem, ac_br):
 
 async def pushing(Kst, repo, ups_rem, ac_br, txt):
     if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-        await eod(Kst, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in vars.")
+        await eod(Kst, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in Config Vars.")
         return
     heroku = from_key(Var.HEROKU_API)
     heroku_app = None
@@ -113,7 +112,7 @@ async def _(e):
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        force_update = is_deploy = is_now = False
+        is_deploy = is_now = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
@@ -153,8 +152,6 @@ async def _(e):
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
             origin.fetch()
-            if is_now:
-                force_update = True
             repo.create_head("main", origin.refs.main)
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
@@ -169,21 +166,18 @@ async def _(e):
             await Kst.edit("`Deploying, please wait...`")
             await pushing(Kst, repo, ups_rem, ac_br, txt)
             return
-        changelog = await gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-        if changelog == "" and not force_update:
-            await eor(Kst, f"v{__version__} **up-to-date** as `main`", time=15)
+        changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
+        if not changelog:
+            await eor(Kst, f"Getter v{__version__} **up-to-date** as `{ac_br}`", time=15)
             repo.__del__()
             return
-        if mode == "" and not force_update:
-            await print_changelogs(Kst, ac_br, changelog)
+        if not mode:
+            await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
-        if force_update:
-            await Kst.edit("`Force-Syncing to latest source code, please wait...`")
-        else:
-            await Kst.edit("`Updating, plase wait...`")
         if is_now:
-            await pulling(Kst, repo, ups_rem, ac_br)
+            await Kst.edit("`Updating, plase wait...`")
+            await pulling(Kst)
         return
 
 

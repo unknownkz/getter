@@ -31,12 +31,12 @@ from . import (
 
 async def heroku_logs(m):
     if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-        await m.edit("Please set `HEROKU_APP_NAME` and `HEROKU_API` in vars.")
+        await m.edit("Please set `HEROKU_APP_NAME` and `HEROKU_API` Config Vars.")
         return
     try:
         app = (from_key(Var.HEROKU_API)).app(Var.HEROKU_APP_NAME)
     except BaseException:
-        await m.edit("`HEROKU_API` and `HEROKU_APP_NAME` is wrong! Kindly re-check in config vars.")
+        await m.edit("`HEROKU_API` and `HEROKU_APP_NAME` is wrong! Kindly re-check in Config Vars.")
         return
     await m.edit("`Downloading Logs...`")
     res = app.get_log()
@@ -114,7 +114,7 @@ async def _(e):
             app = Heroku.apps()[Var.HEROKU_APP_NAME]
             app.restart()
         except BaseException:
-            await Kst.edit("`HEROKU_API` or `HEROKU_APP_NAME` is wrong! Kindly re-check in config vars.")
+            await Kst.edit("`HEROKU_API` or `HEROKU_APP_NAME` is wrong! Kindly re-check in Config Vars.")
 
 
 @kasta_cmd(disable_errors=True, pattern="json$")

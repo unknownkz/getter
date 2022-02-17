@@ -145,7 +145,7 @@ def simple_usage():
 
 def heroku_usage():
     if HEROKU_API is None and HEROKU_APP_NAME is None:
-        return False, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in vars."
+        return False, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in Config Vars."
     user_id = Heroku.account().id
     headers = {
         "User-Agent": choice(some_random_headers),
