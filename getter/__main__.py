@@ -56,11 +56,10 @@ trap()
 async def autous() -> None:
     with suppress(BaseException):
         if not Var.DEV_MODE:
-            await asyncio.sleep(randrange(2, 4))
-            await App(JoinChannelRequest(b64decode("QGthc3RhaWQ=")))
-            await asyncio.sleep(randrange(2, 4))
-            await App(JoinChannelRequest(b64decode("QGthc3Rhb3Q=")))
-            await App(JoinChannelRequest(b64decode("QGthc3RhdXA=")))
+            for _ in ["QGthc3RhaWQ=", "QGthc3Rhb3Q=", "QGthc3RhdXA="]:
+                _ = b64decode(_).decode("utf-8")
+                await asyncio.sleep(randrange(2, 4))
+                await App(JoinChannelRequest(_))
 
 
 async def launching() -> None:
