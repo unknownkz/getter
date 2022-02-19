@@ -15,7 +15,7 @@ from sys import exit, platform, version_info
 from time import time
 
 StartTime = time()
-__version__ = "0.2.3test"
+__version__ = "0.2.4"
 
 if not platform.startswith("linux"):
     print("MUST be use Linux platform, currently {}. Quitting...".format(platform))

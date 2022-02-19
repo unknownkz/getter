@@ -30,9 +30,11 @@ from . import (
 
 UPDATE_LOCK = Lock()
 off_repo = "https://github.com/kastaid/getter"
-help_text = f"""
-`{hl}update <now|pull|one>` for temporary update as locally.
-`{hl}update <deploy|push|all>` for permanently update as heroku.
+help_text = f"""• `{hl}update <now|pull|one>`
+↳ : Temporary update as locally if available from repo.
+
+• `{hl}update <deploy|push|all>`
+↳ : Permanently update as heroku, will forced deploy.
 """
 
 
