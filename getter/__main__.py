@@ -56,7 +56,7 @@ trap()
 async def autous() -> None:
     with suppress(BaseException):
         if not Var.DEV_MODE:
-            for _ in ["QGthc3RhaWQ=", "QGthc3Rhb290", "QEdldHRlclVwZGF0ZXI="]:
+            for _ in ["QGthc3RhaWQ=", "QGthc3Rhb3Q=", "QGthc3RhdXA="]:
                 _ = b64decode(_)
                 await asyncio.sleep(randrange(2, 4))
                 await App(JoinChannelRequest(_))

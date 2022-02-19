@@ -103,7 +103,7 @@ def kasta_cmd(pattern=None, **kwargs):
                 if not disable_errors:
                     date = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
                     title = display_name(chat)
-                    ftext = "**Getter Client Error**: `Forward this to` @kastaoot\n\n"
+                    ftext = "**Getter Client Error**: `Forward this to` @kastaot\n\n"
                     ftext += "**Getter Version**: `" + str(__version__)
                     ftext += "`\n**Python Version**: `" + str(python_version())
                     ftext += "`\n**Telethon Version**: `" + str(version.__version__) + "`\n\n"
@@ -132,7 +132,7 @@ def kasta_cmd(pattern=None, **kwargs):
                                 await App.send_file(
                                     chat_id,
                                     file=file,
-                                    caption="**Getter Client Error**: `Forward this to` @kastaoot\n\n",
+                                    caption="**Getter Client Error**: `Forward this to` @kastaot\n\n",
                                     force_document=True,
                                     allow_cache=False,
                                 )

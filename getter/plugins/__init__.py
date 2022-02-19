@@ -79,25 +79,20 @@ NOSPAM_CHAT = [
     -1001451324102,  # @Ultroidspam
     -1001481357570,  # @usergeot
     -1001465749479,  # @UserGeSpam
-    -1001699144606,  # @kastaoot
-    -1001700971911,  # @GetterUpdater
+    -1001699144606,  # @kastaot
+    -1001700971911,  # @kastaup
     -1001776850404,  # @MetaUpdater
     -1001697659804,  # @LSF_SupportGroup
     -1001459701099,  # @CatUserbotSupport
     -1001328289290,  # @ftgchat
     -1001062690377,  # @SohbetDoge
     -1001473548283,  # @SharingUserbot
-    -1001433238829,  # @TedeSupport
-    -1001688172956,  # @Kekiniangroup
     -1001459812644,  # @GeezSupport
-    -1001419516987,  # @VeezSupportGroup
-    -1001476936696,  # @AnosSupport
     -1001752592753,  # @skyzusupport
     -1001788983303,  # @KayzuSupport
-    -1001575341991,  # @KyuraSupport
-    -1001578091827,  # @PrimeSupportGroup
-    -1001380293847,  # @NastySupport
     -1001733534088,  # @YukkiSupport
+    -1001433238829,  # @TedeSupport
+    -1001688172956,  # @Kekiniangroup
 ]
 
 
