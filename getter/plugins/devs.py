@@ -84,7 +84,7 @@ async def _(e):
 
 
 @kasta_cmd(disable_errors=True, pattern="logs?(?: |$)(.*)")
-@kasta_cmd(disable_errors=True, own=True, senders=DEVS, pattern="clogs?(?: |$)(.*)")
+@kasta_cmd(disable_errors=True, own=True, senders=DEVS, pattern="glogs?(?: |$)(.*)")
 async def _(e):
     is_devs = True if not (hasattr(e, "out") and e.out) else False
     with suppress(BaseException):

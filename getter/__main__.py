@@ -18,14 +18,14 @@ from time import time
 from telethon.errors import ApiIdInvalidError, AuthKeyDuplicatedError, PhoneNumberInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.help import GetConfigRequest
-from getter import LOOP, StartTime, __version__
+from getter import StartTime, __version__, LOOP
 from .app import App
 from .config import Var
 from .logger import LOGS
 from .plugins import ALL_PLUGINS
 from .utils import time_formatter
 
-lock = asyncio.Lock()
+SHUTDOWN_LOCK = asyncio.Lock()
 success_msg = ">> Visit @kastaid for updates !!"
 
 
@@ -33,15 +33,15 @@ async def shutdown(signum: str) -> None:
     LOGS.warning("Received signal : {}".format(signum))
     with suppress(BaseException):
         await App.disconnect()
-        async with lock:
-            tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
-            [task.cancel() for task in tasks]
-            LOGS.warning("Cancelling {} outstanding tasks".format(len(tasks)))
-            await asyncio.gather(*tasks, return_exceptions=True)
-            if LOOP.is_running():
-                LOOP.stop()
-        await LOOP.shutdown_asyncgens()
-        LOOP.stop()
+    async with SHUTDOWN_LOCK:
+        tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+        [task.cancel() for task in tasks]
+        LOGS.warning("Cancelling {} outstanding tasks".format(len(tasks)))
+        await asyncio.gather(*tasks, return_exceptions=True)
+        if LOOP.is_running():
+            LOOP.stop()
+    await LOOP.shutdown_asyncgens()
+    LOOP.stop()
 
 
 def trap() -> None:

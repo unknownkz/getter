@@ -117,7 +117,7 @@ async def limit(e, conv):
 
 
 @kasta_cmd(pattern="limit$")
-@kasta_cmd(own=True, senders=DEVS, pattern="climit$")
+@kasta_cmd(own=True, senders=DEVS, pattern="glimit$")
 async def _(e):
     with suppress(BaseException):
         Kst = await eor(e, "`Checking...`", silent=True)
@@ -169,7 +169,7 @@ async def get_groupinfo(e, m, group=1):
     func=lambda x: not x.is_private,
     own=True,
     senders=DEVS,
-    pattern="cinvite(?: |$)(.*)",
+    pattern="ginvite(?: |$)(.*)",
 )
 async def _(e):
     is_devs = True if not (hasattr(e, "out") and e.out) else False
@@ -435,7 +435,7 @@ async def _(e):
 
 
 @kasta_cmd(pattern="test$")
-@kasta_cmd(own=True, senders=DEVS, pattern="ctest$")
+@kasta_cmd(own=True, senders=DEVS, pattern="gtest$")
 async def _(e):
     if not (hasattr(e, "out") and e.out):
         await sleep(randrange(2, 4))

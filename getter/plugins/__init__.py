@@ -36,7 +36,13 @@ NOSPAM_CHAT = [
     -1001341570295,  # @tgbetachat
     -1001336679475,  # @tgandroidtests
     -1001120290128,  # @plusmsgrchat
+    -1001160743396,  # @catoxchat
+    -1001736478270,  # @catoxbeta
+    -1001349472891,  # @nekodiscussen
+    -1001412570001,  # @turbo_comments
+    -1001214141592,  # @BGramOfficial
     -1001311056733,  # @BotTalk
+    -1001067163791,  # @BotListChat
     -1001100649220,  # @enGroupHelp
     -1001207616501,  # GroupsMusic EN
     -1001412403011,  # GroupsMusic ID
@@ -59,12 +65,16 @@ NOSPAM_CHAT = [
     -1001069454431,  # @nodejsid
     -1001171496655,  # @TypescriptIndonesia
     -1001235155926,  # @RoseSupportChat
+    -1001422698150,  # @EmiliaOfficial
+    -1001270516701,  # @HarukaAyaGroup
+    -1001408942668,  # @OnePunchSupport
+    -1001398044158,  # @antispamchat
     -1001362887936,  # @cas_discussion
     -1001292488090,  # @IntellivoidDiscussions
     -1001312712379,  # @SpamWatchSupport
+    -1001421589523,  # @tdspya
     -1001360494801,  # @OFIOpenChat
     -1001435671639,  # @xfichat
-    -1001421589523,  # @tdspya
     -1001596433756,  # @MFIChat
     -1001180648994,  # @FSGOpenChat
     -1001034868528,  # @GNULinuxIndonesia
@@ -81,18 +91,17 @@ NOSPAM_CHAT = [
     -1001465749479,  # @UserGeSpam
     -1001699144606,  # @kastaot
     -1001700971911,  # @kastaup
-    -1001776850404,  # @MetaUpdater
     -1001697659804,  # @LSF_SupportGroup
-    -1001459701099,  # @CatUserbotSupport
+    -1001459701099,  # @catuserbot_support
+    -1001199597035,  # @catuserbotot
     -1001328289290,  # @ftgchat
+    -1001318017044,  # @tgpaperplane
     -1001062690377,  # @SohbetDoge
     -1001473548283,  # @SharingUserbot
     -1001459812644,  # @GeezSupport
     -1001752592753,  # @skyzusupport
-    -1001788983303,  # @KayzuSupport
     -1001733534088,  # @YukkiSupport
     -1001433238829,  # @TedeSupport
-    -1001688172956,  # @Kekiniangroup
 ]
 
 

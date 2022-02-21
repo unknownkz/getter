@@ -7,7 +7,7 @@ heroku3==5.1.4
 requests==2.27.1
 beautifulsoup4==4.10.0
 Markdown==3.3.6
-GitPython==3.1.26
+GitPython==3.1.27
 gpytranslate==1.4.0
 aiofiles==0.8.0
 aiocsv==1.2.1

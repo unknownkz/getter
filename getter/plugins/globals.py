@@ -25,7 +25,7 @@ from . import (
 
 
 @kasta_cmd(pattern="g(admin|)cast(?: |$)(.*)")
-@kasta_cmd(own=True, senders=DEVS, pattern="cg(admin|)cast(?: |$)(.*)")
+@kasta_cmd(own=True, senders=DEVS, pattern="gg(admin|)cast(?: |$)(.*)")
 async def _(e):
     is_admin = True if e.text and e.text[2:7] == "admin" or e.text[3:8] == "admin" else False
     match = e.pattern_match.group(2)
