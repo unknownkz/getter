@@ -102,6 +102,8 @@ NOSPAM_CHAT = [
     -1001752592753,  # @skyzusupport
     -1001733534088,  # @YukkiSupport
     -1001433238829,  # @TedeSupport
+    -1001132729899,  # @postgresql_id
+    -1001187059777,  # @MongoDB_ID
 ]
 
 
