@@ -11,10 +11,12 @@ import asyncio
 from functools import partial
 from re import IGNORECASE, match, sub
 from typing import Union
+from aiohttp import ClientSession
 from bs4 import BeautifulSoup
+from emoji import get_emoji_regexp
 from markdown import markdown
-from telethon.tl.types import MessageEntityMentionName
-from telethon.utils import get_display_name
+from telethon.tl.types import MessageEntityMentionName, MessageEntityPre
+from telethon.utils import add_surrogate, get_display_name
 from .logger import LOGS
 
 tlink_re = r"^(?:https?://)((www)\.|)(?:t\.me|telegram\.(?:dog|me))/(\w+)$"
@@ -38,6 +40,18 @@ def md_to_text(md: str) -> str:
     html = markdown(md)
     soup = BeautifulSoup(html, features="html.parser")
     return "".join(soup.findAll(text=True))
+
+
+def parse_pre(text: str) -> str:
+    text = text.strip()
+    return (
+        text,
+        [MessageEntityPre(offset=0, length=len(add_surrogate(text)), language="")],
+    )
+
+
+def deEmojify(inputString: str) -> str:
+    return get_emoji_regexp().sub("", inputString)
 
 
 def humanbytes(size: Union[int, str]) -> str:
@@ -87,11 +101,36 @@ async def runner(cmd: str) -> (bytes, bytes):
     return out, err
 
 
+async def searcher(
+    url: str,
+    post: bool = None,
+    headers: dict = None,
+    params: dict = None,
+    json: dict = None,
+    data: dict = None,
+    ssl=None,
+    re_json: bool = False,
+    re_content: bool = False,
+    real: bool = False,
+):
+    async with ClientSession(headers=headers) as client:
+        if post:
+            data = await client.post(url, json=json, data=data, ssl=ssl)
+        else:
+            data = await client.get(url, params=params, ssl=ssl)
+        if re_json:
+            return await data.json()
+        if re_content:
+            return await data.read()
+        if real:
+            return data
+        return await data.text()
+
+
 async def get_user(event, group=1):
     args = event.pattern_match.group(group).split(" ", 1)
     extra = None
     await event.get_chat()
-
     try:
         if args:
             user = args[0]
@@ -99,14 +138,12 @@ async def get_user(event, group=1):
                 extra = "".join(args[1:])
             if user.isnumeric() or (user.startswith("-") and user[1:].isnumeric()):
                 user = int(user)
-
             if event.message.entities:
                 probable_mention = event.message.entities[0]
                 if isinstance(probable_mention, MessageEntityMentionName):
                     user_id = probable_mention.user_id
                     user_obj = await event.client.get_entity(user_id)
                     return user_obj, extra
-
             if isinstance(user, int) or user.startswith("@"):
                 user_obj = await event.client.get_entity(user)
                 return user_obj, extra
@@ -125,23 +162,19 @@ async def get_user(event, group=1):
             return None, None
     except Exception as e:
         LOGS.error(str(e))
-
     try:
         extra = event.pattern_match.group(group)
         if event.is_private:
             user_obj = await event.get_chat()
             return user_obj, extra
-
         if event.reply_to_msg_id:
             prev_msg = await event.get_reply_message()
             if not prev_msg.from_id:
                 return None, None
             user_obj = await event.client.get_entity(prev_msg.sender_id)
             return user_obj, extra
-
         if not args:
             return None, None
     except Exception as e:
         LOGS.error(str(e))
-
     return None, None

@@ -187,8 +187,8 @@ async def _(e):
 async def _(e):
     await e.eor(
         f"""
-• **Repo**: [GitHub](https://github.com/kastaid/getter)
-• **Deploy**: [View at @kastaid](https://t.me/kastaid/9)
+• **Repo:** [GitHub](https://kasta.vercel.app/getter_source)
+• **Deploy:** [View at @kastaid](https://kasta.vercel.app/getter_deploy)
 """,
     )
 

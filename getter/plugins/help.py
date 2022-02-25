@@ -24,37 +24,31 @@ from . import (
 async def _(e):
     args = e.pattern_match.group(1).lower()
     Kst = await e.eor("`Loading...`")
-    me = await e.client.get_me()
     if args:
         if args in HELP:
             await Kst.edit(
                 f"📦 Plugin **{HELP[args][0]}** `{hl}help {args}`\n\n" + str(HELP[args][1]).replace("{i}", hl)
             )
         else:
-            await Kst.edit(f"⛔ Plugin [`{args}`] not found! Type `{hl}help` to see the correct plugins name.")
+            await Kst.edit(f"⛔ Plugin [`{args}`] not found! Type `{hl}help` correct plugins name.")
     else:
         plugins = ""
         for p in HELP:
             plugins += f"<code>{str(p)}</code>  |  "
         plugins = plugins[:-3]
-        text = f"""👤 <b>Owner</b>: <code>{display_name(me)} ({me.id})</code>
-⚙️ <b>Heroku App Name</b>: <code>{Var.HEROKU_APP_NAME}</code>
-🤖 <b>Getter Version</b>: <code>v{__version__}</code>
-🐍 <b>Python Version</b>: <code>v{python_version()}</code>
-📦 <b>Telethon Version</b>: <code>v{version.__version__}</code>
-🔌 <b>Plugins</b>: <code>{len(HELP)}</code>
-📚 <b>Usage</b>: <code>{hl}help &lt;plugin name&gt;</code>
+        me = await e.client.get_me()
+        text = f"""👤 <b>Owner:</b> <code>{display_name(me)} ({me.id})</code>
+⚙️ <b>Heroku App Name:</b> <code>{Var.HEROKU_APP_NAME}</code>
+🤖 <b>Getter Version:</b> <code>v{__version__}</code>
+🐍 <b>Python Version:</b> <code>v{python_version()}</code>
+📦 <b>Telethon Version:</b> <code>v{version.__version__}</code>
+🔌 <b>Plugins:</b> <code>{len(HELP)}</code>
+📚 <b>Usage:</b> <code>{hl}help &lt;plugin name&gt;</code>
 
-<b>All plugins and their commands</b>:
+<b>All plugins and their commands:</b>
 {plugins}
 
-~ @kastaid"""
+<b>Example:</b> Type <code>{hl}help chats</code> for usage.
+"""
         await sleep(1)
-        await Kst.try_delete()
-        help = await e.client.send_message(
-            e.chat_id,
-            text,
-            link_preview=False,
-            parse_mode="html",
-        )
-        await help.reply(f"**Example**: Type `{hl}help devs` for usage.")
+        await Kst.edit(text, parse_mode="html")

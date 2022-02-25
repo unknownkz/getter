@@ -23,10 +23,14 @@ from getter.utils import (
     display_name,
     get_user,
     get_username,
+    parse_pre,
+    md_to_text,
+    deEmojify,
     humanbytes,
     is_telegram_link,
     runner,
     time_formatter,
+    searcher,
 )
 from getter.wrappers import eod, eor, eos
 
@@ -100,6 +104,9 @@ NOSPAM_CHAT = [
     -1001473548283,  # @SharingUserbot
     -1001459812644,  # @GeezSupport
     -1001752592753,  # @skyzusupport
+    -1001788983303,  # @KayzuSupport
+    -1001575341991,  # @KyuraSupport
+    -1001578091827,  # @PrimeSupportGroup
     -1001733534088,  # @YukkiSupport
     -1001433238829,  # @TedeSupport
     -1001132729899,  # @postgresql_id

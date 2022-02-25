@@ -15,7 +15,7 @@ from sys import exit, platform, version_info
 from time import time
 
 StartTime = time()
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 
 if not platform.startswith("linux"):
     print("MUST be use Linux platform, currently {}. Quitting...".format(platform))
@@ -26,6 +26,16 @@ if version_info.major < 3 or version_info.minor < 9:
     exit(1)
 
 Root: Path = Path(__file__).parent.parent
+
+dirs = ["downloads"]
+for _ in dirs:
+    if not Path(_).exists():
+        Path(_).mkdir(parents=True, exist_ok=True)
+    else:
+        for f in (Root / _).rglob("*.*"):
+            if f.exists():
+                f.unlink(missing_ok=True)
+
 for _ in Root.rglob("*s_list.csv*"):
     _.unlink(missing_ok=True)
 

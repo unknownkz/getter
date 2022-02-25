@@ -25,6 +25,7 @@ from . import (
     hl,
     eor,
     kasta_cmd,
+    parse_pre,
     time_formatter,
 )
 
@@ -63,9 +64,9 @@ async def _(e):
 async def _(e):
     result = await e.client(functions.help.GetNearestDcRequest())
     await e.eor(
-        f"**Country**: `{result.country}`\n"
-        f"**Nearest Datacenter**: `{result.nearest_dc}`\n"
-        f"**This Datacenter**: `{result.this_dc}`"
+        f"**Country:** `{result.country}`\n"
+        f"**Nearest Datacenter:** `{result.nearest_dc}`\n"
+        f"**This Datacenter:** `{result.this_dc}`"
     )
 
 
@@ -135,7 +136,7 @@ async def _(e):
                 )
             await e.try_delete()
         else:
-            await e.edit(f"```{Kst}```")
+            await e.edit(Kst, parse_mode=parse_pre)
 
 
 HELP.update(
@@ -160,7 +161,7 @@ HELP.update(
 • `{i}restart`
 ↳ : Restart the app.
 
-• `{i}json <reply to message>`
+• `{i}json <reply>`
 ↳ : Get the json encoding of the message.
 """,
         ]

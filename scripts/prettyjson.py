@@ -14,7 +14,7 @@ from time import sleep
 
 try:
     import ujson as uj
-except (ImportError, ModuleNotFoundError):
+except ModuleNotFoundError:
     print("Installing ujson...")
     check_call([executable, "-m", "pip", "install", "--no-cache-dir", "-U", "ujson==5.1.0"])
 finally:

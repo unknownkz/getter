@@ -35,11 +35,11 @@ from telethon.tl.types import InputPeerUser
 from telethon.tl.types import UserStatusEmpty as StatusEmpty
 from telethon.tl.types import UserStatusLastMonth as LastMonth
 from . import (
-    DEVS,
-    HELP,
     StartTime,
     __version__,
     Root,
+    DEVS,
+    HELP,
     display_name,
     eor,
     eod,
@@ -61,46 +61,46 @@ with_error_text = """
 ✅ <b>Done Inviting With Error</b>
 (<code>MAY GOT LIMIT ERROR FROM TELETHON AND TRY AGAIN LATER</code>)
 
-<b>✘ Error Message</b>:
+<b>✘ Error Message:</b>
 <pre>{}</pre>
 
-• <b>Invited</b>: <code>{}</code>
-• <b>Failed</b>: <code>{}</code>
-• <b>Taken</b>: <code>{}</code>
+• <b>Invited:</b> <code>{}</code>
+• <b>Failed:</b> <code>{}</code>
+• <b>Taken:</b> <code>{}</code>
 
-<b>User</b>: <code>{}</code>
-<b>Datetime</b>: <code>{}</code>
+<b>User:</b> <code>{}</code>
+<b>Datetime:</b> <code>{}</code>
 """
 
 invite_text = """
 🔄 <b>Inviting...</b>
 
-• <b>Invited</b>: <code>{}</code>
-• <b>Failed</b>: <code>{}</code>
+• <b>Invited:</b> <code>{}</code>
+• <b>Failed:</b> <code>{}</code>
 
-<b>✘ Last Error</b>: <code>{}</code>
+<b>✘ Last Error:</b> <code>{}</code>
 """
 
 done_text = """
 ✅ <b>Done Inviting</b>
 
-• <b>Invited</b>: <code>{}</code>
-• <b>Failed</b>: <code>{}</code>
-• <b>Taken</b>: <code>{}</code>
+• <b>Invited:</b> <code>{}</code>
+• <b>Failed:</b> <code>{}</code>
+• <b>Taken:</b> <code>{}</code>
 
-<b>User</b>: <code>{}</code>
-<b>Datetime</b>: <code>{}</code>
+<b>User:</b> <code>{}</code>
+<b>Datetime:</b> <code>{}</code>
 """
 
 getmembers_text = """
 ✅ Scraping {} completed in <code>{}</code>
 
-<b>ID</b>: <code>{}</code>
-<b>Title</b>: <code>{}</code>
-<b>Username</b>: {}
-<b>Total</b>: <code>{}</code>
-<b>Done ({})</b>: <code>{}</code>
-<b>Datetime</b>: <code>{}</code>
+<b>ID:</b> <code>{}</code>
+<b>Title:</b> <code>{}</code>
+<b>Username:</b> {}
+<b>Total:</b> <code>{}</code>
+<b>Done ({}):</b> <code>{}</code>
+<b>Datetime:</b> <code>{}</code>
 """
 
 
@@ -441,7 +441,7 @@ async def _(e):
         await sleep(randrange(2, 4))
     uptime = time_formatter((time() - StartTime) * 1000)
     # http://www.timebie.com/std/utc.php
-    Kst = "**Getter Version**: `{}`\n**User ID**: `{}`\n**Uptime**: `{}`\n**UTC Now**: `{}`".format(
+    Kst = "**Getter Version:** `{}`\n**User ID:** `{}`\n**Uptime:** `{}`\n**UTC Now:** `{}`".format(
         __version__,
         e.client.uid,
         uptime,
@@ -460,7 +460,7 @@ HELP.update(
 • `{i}getmembers <username/link/id (group as target)>`
 ↳ : Scraping members from the group and then save as csv files (members, admins, bots). Run this command in everywhere exclude the target groups.
 
-**Note**:
+**Note:**
   - Telethon (Telegram API) have a limit to scraping members. If you need to get more members you can use this command with options `append` or `a` example: `<{i}getmembers @username append`>. Repeat it after finished to get more members without duplicated rows. You can also combination with difference groups!
   - Files members_list.csv, admins_list.csv and bot_list.csv saved at main directory and not removed, will replaced if you run the command above again. But if the app restarted files will be destroyed, so keep downloading latest files.
 

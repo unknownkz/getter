@@ -28,7 +28,7 @@ from typing import Generator
 
 try:
     import psutil as psu
-except (ImportError, ModuleNotFoundError):
+except ModuleNotFoundError:
     print("Installing psutil...")
     check_call([executable, "-m", "pip", "install", "--no-cache-dir", "-U", "psutil"])
 finally:

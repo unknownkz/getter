@@ -27,48 +27,48 @@ from . import (
 
 usage = """
 **🖥️ Uptime 🖥️**
-**App**: `{}`
-**System**: `{}`
+**App:** `{}`
+**System:** `{}`
 
 **⚙️ Dyno Usage ⚙️**
 -> **Dyno usage for** `{}`:
   •  **{}h**  **{}m |** `[{}%]`
--> **Dyno hours quota remaining this month**:
+-> **Dyno hours quota remaining this month:**
   •  **{}h**  **{}m |** `[{}%]`
 
 **💾 Disk Space 💾**
-**Total**: `{}`
-**Used**: `{}`
-**Free**: `{}`
+**Total:** `{}`
+**Used:** `{}`
+**Free:** `{}`
 
 **📊 Data Usage 📊**
-**Upload**: `{}`
-**Download**: `{}`
+**Upload:** `{}`
+**Download:** `{}`
 
 **📈 Memory Usage 📈**
-**CPU**: `{}`
-**RAM**: `{}`
-**DISK**: `{}`
+**CPU:** `{}`
+**RAM:** `{}`
+**DISK:** `{}`
 """
 
 usage_simple = """
 **🖥️ Uptime 🖥️**
-**App**: `{}`
-**System**: `{}`
+**App:** `{}`
+**System:** `{}`
 
 **💾 Disk Space 💾**
-**Total**: `{}`
-**Used**: `{}`
-**Free**: `{}`
+**Total:** `{}`
+**Used:** `{}`
+**Free:** `{}`
 
 **📊 Data Usage 📊**
-**Upload**: `{}`
-**Download**: `{}`
+**Upload:** `{}`
+**Download:** `{}`
 
 **📈 Memory Usage 📈**
-**CPU**: `{}`
-**RAM**: `{}`
-**DISK**: `{}`
+**CPU:** `{}`
+**RAM:** `{}`
+**DISK:** `{}`
 """
 
 some_random_headers = [

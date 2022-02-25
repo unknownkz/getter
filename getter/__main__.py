@@ -65,6 +65,7 @@ async def autous() -> None:
 async def launching() -> None:
     try:
         await App.start()
+        await asyncio.sleep(2)
         config = await App(GetConfigRequest())
         for opt in config.dc_options:
             if opt.ip_address == App.session.server_address:
@@ -101,7 +102,9 @@ async def main() -> None:
     launch_time = time_formatter((time() - StartTime) * 1000)
     launch_msg = ">> 🚀 v{} Launch {} in {}".format(__version__, App.uid, launch_time)
     LOGS.info(launch_msg)
+    await asyncio.sleep(2)
     LOGS.info(success_msg)
+    await asyncio.sleep(2)
     await App.run_until_disconnected()
 
 
@@ -118,6 +121,9 @@ if __name__ == "__main__":
         asyncio.CancelledError,
     ):
         pass
+    except (ModuleNotFoundError, ImportError) as e:
+        LOGS.exception("[MAIN_MODULE_IMPORT] : {}".format(e))
+        exit(1)
     except Exception as e:
         LOGS.exception("[MAIN] : {}".format(e))
     finally:

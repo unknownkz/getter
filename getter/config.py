@@ -62,4 +62,4 @@ if not (
     LOGS.warning("Your HANDLER [{}] is not supported yet, set default as dot [.command]".format(Var.HANDLER))
     HANDLER = "."
 else:
-    HANDLER = Var.HANDLER
+    HANDLER = "".join(Var.HANDLER.split())

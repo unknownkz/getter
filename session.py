@@ -13,7 +13,7 @@ from sys import exit, executable
 
 try:
     import telethon as tl
-except (ImportError, ModuleNotFoundError):
+except ModuleNotFoundError:
     print("Installing Telethon...")
     # python3 -m pip install --no-cache-dir Telethon==1.24.0
     check_call([executable, "-m", "pip", "install", "--no-cache-dir", "Telethon==1.24.0"])

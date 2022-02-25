@@ -34,11 +34,11 @@ async def _(e):
     elif e.is_reply:
         content = await e.get_reply_message()
     else:
-        return await eod(e, "`Give some text to Gcast or reply a message.`")
+        return await eod(e, "`Give some text to Gcast or reply message.`")
     if is_admin:
-        Kst = await eor(e, "📢 __Gcasting to groups as admin...__")
+        Kst = await eor(e, "⚡ __**Gcasting to groups as admin...**__")
     else:
-        Kst = await eor(e, "📢 __Gcasting to all groups...__")
+        Kst = await eor(e, "⚡ __**Gcasting to all groups...**__")
     start_time = time()
     success = failed = 0
     errors = ""

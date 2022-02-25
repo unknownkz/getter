@@ -103,23 +103,23 @@ def kasta_cmd(pattern=None, **kwargs):
                 if not disable_errors:
                     date = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M:%S")
                     title = display_name(chat)
-                    ftext = "**Getter Client Error**: `Forward this to` @kastaot\n\n"
-                    ftext += "**Getter Version**: `" + str(__version__)
-                    ftext += "`\n**Python Version**: `" + str(python_version())
-                    ftext += "`\n**Telethon Version**: `" + str(version.__version__) + "`\n\n"
+                    ftext = "**Getter Client Error:** `Forward this to` @kastaot\n\n"
+                    ftext += "**Getter Version:** `" + str(__version__)
+                    ftext += "`\n**Python Version:** `" + str(python_version())
+                    ftext += "`\n**Telethon Version:** `" + str(version.__version__) + "`\n\n"
                     ftext += "--------START GETTER CRASH LOG--------"
-                    ftext += "\n\n**Date**: `" + date
-                    ftext += "`\n**Chat**: `" + str(chat_id) + "` " + str(title)
-                    ftext += "\n**User ID**: `" + str(check.sender_id)
-                    ftext += "`\n**Replied**: `" + str(check.is_reply)
-                    ftext += "`\n\n**Event Trigger**:`\n"
+                    ftext += "\n\n**Date:** `" + date
+                    ftext += "`\n**Chat:** `" + str(chat_id) + "` " + str(title)
+                    ftext += "\n**User ID:** `" + str(check.sender_id)
+                    ftext += "`\n**Replied:** `" + str(check.is_reply)
+                    ftext += "`\n\n**Event Trigger:**`\n"
                     ftext += str(check.text)
-                    ftext += "`\n\n**Traceback Info**:`\n"
+                    ftext += "`\n\n**Traceback Info:**`\n"
                     ftext += str(format_exc())
-                    ftext += "`\n\n**Error Text**:`\n"
+                    ftext += "`\n\n**Error Text:**`\n"
                     ftext += str(exc_info()[1])
                     ftext += "`\n\n--------END GETTER CRASH LOG--------"
-                    ftext += "\n\n\n**Last 3 Commits**:`\n"
+                    ftext += "\n\n\n**Last 3 Commits:**`\n"
                     stdout, stderr = await runner('git log --pretty=format:"%an: %s" -3')
                     result = stdout + stderr
                     ftext += result + "`"
@@ -132,7 +132,7 @@ def kasta_cmd(pattern=None, **kwargs):
                                 await App.send_file(
                                     chat_id,
                                     file=file,
-                                    caption="**Getter Client Error**: `Forward this to` @kastaot\n\n",
+                                    caption="**Getter Client Error:** `Forward this to` @kastaot\n\n",
                                     force_document=True,
                                     allow_cache=False,
                                 )

@@ -10,7 +10,6 @@
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
-from gpytranslate import Translator
 from telethon.errors import YouBlockedUserError
 from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.contacts import UnblockRequest
@@ -48,7 +47,7 @@ async def _(e):
         async for m in e.client.iter_messages(
             e.chat_id,
             limit=num,
-            min_id=e.reply_to_msg_id if e.reply_to_msg_id else None,
+            min_id=e.reply_to_msg_id or None,
         ):
             await m.try_delete()
             count += 1
@@ -85,7 +84,7 @@ async def _(e):
     async for m in e.client.iter_messages(
         chat,
         from_user="me",
-        min_id=e.reply_to_msg_id if e.reply_to_msg_id else None,
+        min_id=e.reply_to_msg_id or None,
     ):
         msgs.append(m)
         count += 1
@@ -151,40 +150,6 @@ async def _(e):
     with suppress(BaseException):
         await e.try_delete()
         await e.client(LeaveChannelRequest(e.chat_id))
-
-
-@kasta_cmd(disable_errors=True, pattern="tr")
-async def _(e):
-    if len(e.text) > 3 and e.text[3] != " ":
-        await e.try_delete()
-        return
-    input = e.text[4:6]
-    txt = e.text[7:]
-    Kst = await e.eor("`Translate...`")
-    if txt:
-        text = txt
-        lang = input or "id"
-    elif e.is_reply:
-        prev_msg = await e.get_reply_message()
-        text = prev_msg.message
-        lang = input or "id"
-    else:
-        await Kst.eor(f"`{hl}tr <lang code>` reply a message.", time=15)
-        return
-    try:
-        translator = Translator()
-        translated = await translator(text.strip(), targetlang=lang)
-        after_tr_text = translated.text
-        source_lang = await translator.detect(translated.orig)
-        transl_lang = await translator.detect(translated.text)
-        output_str = "Detected: **{}**\nTranslated: **{}**\n\n```{}```".format(
-            source_lang,
-            transl_lang,
-            after_tr_text,
-        )
-        await Kst.edit(output_str)
-    except Exception as e:
-        await Kst.edit(str(e))
 
 
 @kasta_cmd(disable_errors=True, pattern="(sa|sg)(?: |$)(.*)")
@@ -256,10 +221,10 @@ HELP.update(
             """• `{i}del|d|D|del|Del`
 ↳ : Delete a messages.
 
-• `{i}purge <limit (optional)> <reply to message>`
+• `{i}purge <limit (optional)> <reply>`
 ↳ : Purge all messages from the replied message.
 
-• `{i}purgeme <reply to message>`
+• `{i}purgeme <reply>`
 ↳ : Purge Only your messages from the replied message.
 
 • `{i}id|{i}ids`
@@ -267,9 +232,6 @@ HELP.update(
 
 • `{i}total <username/reply>`
 ↳ : Get total user messages.
-
-• `{i}tr <lang code> <reply to message>`
-↳ : Translate a replied messages.
 
 • `{i}sa|{i}sg <reply/username/id>`
 ↳ : Get history of names and usernames by sangmata.
