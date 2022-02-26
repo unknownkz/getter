@@ -17,7 +17,6 @@ from sys import exit
 from time import time
 from telethon.errors import ApiIdInvalidError, AuthKeyDuplicatedError, PhoneNumberInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
-from telethon.tl.functions.help import GetConfigRequest
 from getter import StartTime, __version__, LOOP
 from .app import App
 from .config import Var
@@ -25,32 +24,23 @@ from .logger import LOGS
 from .plugins import ALL_PLUGINS
 from .utils import time_formatter
 
-SHUTDOWN_LOCK = asyncio.Lock()
 success_msg = ">> Visit @kastaid for updates !!"
+
+for signame in {"SIGINT", "SIGTERM", "SIGABRT"}:
+    sig = getattr(signal, signame)
+    LOOP.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s.name)))
 
 
 async def shutdown(signum: str) -> None:
-    LOGS.warning("Received signal : {}".format(signum))
+    LOGS.warning("Stop signal received : {}".format(signum))
     with suppress(BaseException):
         await App.disconnect()
-    async with SHUTDOWN_LOCK:
-        tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
-        [task.cancel() for task in tasks]
-        LOGS.warning("Cancelling {} outstanding tasks".format(len(tasks)))
-        await asyncio.gather(*tasks, return_exceptions=True)
-        if LOOP.is_running():
-            LOOP.stop()
+    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+    [task.cancel() for task in tasks]
+    LOGS.warning("Cancelling outstanding tasks : {}".format(len(tasks)))
+    await asyncio.gather(*tasks, return_exceptions=True)
     await LOOP.shutdown_asyncgens()
     LOOP.stop()
-
-
-def trap() -> None:
-    for signame in {"SIGINT", "SIGTERM", "SIGABRT"}:
-        sig = getattr(signal, signame)
-        LOOP.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s.name)))
-
-
-trap()
 
 
 async def autous() -> None:
@@ -64,16 +54,8 @@ async def autous() -> None:
 
 async def launching() -> None:
     try:
+        await asyncio.sleep(randrange(5, 8))
         await App.start()
-        await asyncio.sleep(2)
-        config = await App(GetConfigRequest())
-        for opt in config.dc_options:
-            if opt.ip_address == App.session.server_address:
-                if App.session.dc_id != opt.id:
-                    LOGS.warning("Fixed DC ID in session from {} to {}".format(App.session.dc_id, opt.id))
-                App.session.set_dc(opt.id, opt.ip_address, opt.port)
-                App.session.save()
-                break
         await asyncio.sleep(2)
         App.me = await App.get_me()
         App.uid = App.me.id
@@ -125,7 +107,7 @@ if __name__ == "__main__":
         LOGS.exception("[MAIN_MODULE_IMPORT] : {}".format(e))
         exit(1)
     except Exception as e:
-        LOGS.exception("[MAIN] : {}".format(e))
+        LOGS.exception("[MAIN_ERROR] : {}".format(e))
     finally:
-        LOGS.info("[MAIN] - Stopped...")
+        LOGS.info("[MAIN] - App Stopped...")
         exit(0)

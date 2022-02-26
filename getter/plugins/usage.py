@@ -17,9 +17,9 @@ import psutil as psu
 from heroku3 import from_key
 from requests import get
 from . import (
-    HELP,
     StartTime,
     Var,
+    HELP,
     humanbytes,
     kasta_cmd,
     time_formatter,
@@ -105,7 +105,7 @@ async def _(e):
             opt = e.text.split(" ", maxsplit=1)[1]
         except IndexError:
             return await Kst.edit(simple_usage())
-        if opt in ["heroku", "h"]:
+        if opt in ["heroku", "hk", "h"]:
             is_hk, hk = heroku_usage()
             await Kst.edit(hk)
         else:
@@ -219,11 +219,11 @@ HELP.update(
     {
         "usage": [
             "Usage",
-            """• `{i}usage`
-↳ : Get overall usage.
+            """❯ `{i}usage`
+Get overall usage.
 
-• `{i}usage <heroku|h>`
-↳ : Get heroku stats.
+❯ `{i}usage <heroku|hk|h>`
+Get heroku stats.
 """,
         ]
     }

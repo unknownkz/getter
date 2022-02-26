@@ -31,35 +31,35 @@ HELP.update(
     {
         "fakeaction": [
             "Fake Action",
-            """• `{i}ftyping <time/in seconds>`
-↳ : Show Fake Typing action in current chat.
+            """❯ `{i}ftyping <time/in seconds>`
+Show Fake Typing action in current chat.
 
-• `{i}faudio <time/in seconds>`
-↳ : Show Fake Recording action in current chat.
+❯ `{i}faudio <time/in seconds>`
+Show Fake Recording action in current chat.
 
-• `{i}fvideo <time/in seconds>`
-↳ : Show Fake Video action in current chat.
+❯ `{i}fvideo <time/in seconds>`
+Show Fake Video action in current chat.
 
-• `{i}fgame <time/in seconds>`
-↳ : Show Fake Game Playing action in current chat.
+❯ `{i}fgame <time/in seconds>`
+Show Fake Game Playing action in current chat.
 
-• `{i}fsticker <time/in seconds>`
-↳ : Show Fake Sticker Choosing action in current chat.
+❯ `{i}fsticker <time/in seconds>`
+Show Fake Sticker Choosing action in current chat.
 
-• `{i}flocation <time/in seconds>`
-↳ : Show Fake Location action in current chat.
+❯ `{i}flocation <time/in seconds>`
+Show Fake Location action in current chat.
 
-• `{i}fcontact <time/in seconds>`
-↳ : Show Fake Contact Choosing action in current chat.
+❯ `{i}fcontact <time/in seconds>`
+Show Fake Contact Choosing action in current chat.
 
-• `{i}fround <time/in seconds>`
-↳ : Show Fake Video Message action in current chat.
+❯ `{i}fround <time/in seconds>`
+Show Fake Video Message action in current chat.
 
-• `{i}fphoto <time/in seconds>`
-↳ : Show Fake Sending Photo action in current chat.
+❯ `{i}fphoto <time/in seconds>`
+Show Fake Sending Photo action in current chat.
 
-• `{i}fdocument <time/in seconds>`
-↳ : Show Fake Sending Document action in current chat.
+❯ `{i}fdocument <time/in seconds>`
+Show Fake Sending Document action in current chat.
 """,
         ]
     }

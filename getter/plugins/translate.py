@@ -88,11 +88,11 @@ HELP.update(
     {
         "translate": [
             "Translate",
-            """• `{i}tr <lang code> <text/reply>`
-↳ : Translate a languages.
+            """❯ `{i}tr <lang code> <text/reply>`
+Translate a languages.
 
-• `{i}tts <lang code> <text/reply>`
-↳ : Text to speech.
+❯ `{i}tts <lang code> <text/reply>`
+Text to speech.
 
 **Note:** Default <lang code> is `id`.
 """,

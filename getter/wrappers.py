@@ -8,7 +8,6 @@
 # ================================================================
 
 from asyncio import sleep
-from contextlib import suppress
 from telethon.tl.custom import Message
 
 
@@ -24,23 +23,27 @@ async def eor(e, text=None, **args):
         del args["force_reply"]
     if "link_preview" not in args:
         args.update({"link_preview": False})
-    with suppress(BaseException):
-        if hasattr(e, "out") and e.out:
-            if "silent" in args:
-                del args["silent"]
-            if edit_time:
-                await sleep(edit_time)
+    if hasattr(e, "out") and e.out:
+        if "silent" in args:
+            del args["silent"]
+        if edit_time:
+            await sleep(edit_time)
+        try:
+            try:
+                del args["reply_to"]
+            except KeyError:
+                pass
             res = await e.edit(text, **args)
-        else:
-            if force_reply:
-                args["reply_to"] = e.reply_to_msg_id or e
-            else:
-                args["reply_to"] = e.reply_to_msg_id or None
-            res = await e.client.send_message(e.chat_id, text, **args)
-        if time:
-            await sleep(time)
-            return await _try_delete(res)
-        return res
+        except BaseException:
+            pass
+    else:
+        _ = e if force_reply else None
+        args["reply_to"] = e.reply_to_msg_id or _
+        res = await e.client.send_message(e.chat_id, text, **args)
+    if time:
+        await sleep(time)
+        return await _try_delete(res)
+    return res
 
 
 async def eod(e, text=None, **kwargs):
@@ -59,23 +62,29 @@ async def eos(e, text=None, **args):
         args.update({"link_preview": False})
     if "silent" not in args:
         args.update({"silent": True})
-    with suppress(BaseException):
-        if not edit:
-            if force_reply:
-                args["reply_to"] = e.reply_to_msg_id or e
-            else:
-                args["reply_to"] = e.reply_to_msg_id or None
-            await _try_delete(e)
-            await e.client.send_message(e.chat_id, text, **args)
-        else:
-            if "silent" in args:
-                del args["silent"]
+    if edit:
+        if "silent" in args:
+            del args["silent"]
+        try:
+            try:
+                del args["reply_to"]
+            except KeyError:
+                pass
             await e.edit(text, **args)
+        except BaseException:
+            pass
+    else:
+        _ = e if force_reply else None
+        args["reply_to"] = e.reply_to_msg_id or _
+        await _try_delete(e)
+        await e.client.send_message(e.chat_id, text, **args)
 
 
 async def _try_delete(e):
-    with suppress(BaseException):
+    try:
         return await e.delete()
+    except BaseException:
+        pass
 
 
 setattr(Message, "eor", eor)  # noqa: B010

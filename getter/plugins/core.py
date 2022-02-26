@@ -441,7 +441,7 @@ async def _(e):
         await sleep(randrange(2, 4))
     uptime = time_formatter((time() - StartTime) * 1000)
     # http://www.timebie.com/std/utc.php
-    Kst = "**Getter Version:** `{}`\n**User ID:** `{}`\n**Uptime:** `{}`\n**UTC Now:** `{}`".format(
+    Kst = "**Getter Version:** `{}`\n**ID:** `{}`\n**Uptime:** `{}`\n**UTC Now:** `{}`".format(
         __version__,
         e.client.uid,
         uptime,
@@ -454,21 +454,22 @@ HELP.update(
     {
         "core": [
             "Core",
-            """• `{i}inviteall <username/link/id (group as target)>`
-↳ : Invite people's (exclude self, bots, admins, deleted accounts, status last month, status empty) to your current group/channel.
+            """❯ `{i}inviteall <username/link/id (group as target)>`
+Invite people's (exclude self, bots, admins, deleted accounts, status last month, status empty) to your current group/channel.
 
-• `{i}getmembers <username/link/id (group as target)>`
-↳ : Scraping members from the group and then save as csv files (members, admins, bots). Run this command in everywhere exclude the target groups.
+❯ `{i}getmembers <username/link/id (group as target)>`
+Scraping members from the group and then save as csv files (members, admins, bots).
+Run this command in everywhere exclude the target groups.
 
 **Note:**
-  - Telethon (Telegram API) have a limit to scraping members. If you need to get more members you can use this command with options `append` or `a` example: `<{i}getmembers @username append`>. Repeat it after finished to get more members without duplicated rows. You can also combination with difference groups!
-  - Files members_list.csv, admins_list.csv and bot_list.csv saved at main directory and not removed, will replaced if you run the command above again. But if the app restarted files will be destroyed, so keep downloading latest files.
+- Telethon (Telegram API) have a limit to scraping members. If you need to get more members you can use this command with options <`append`> or <`a`> example: `<{i}getmembers @username append`>. Repeat it after finished to get more members without duplicated rows. You can also combination with difference groups!
+- Files members_list.csv, admins_list.csv and bot_list.csv saved at main directory and not removed, will replaced if you run the command above again. But if the app restarted files will be destroyed, so keep downloading latest files.
 
-• `{i}addmembers|{i}addadmins|{i}addbots`
-↳ : Adding members to your current group/channel from saved csv files generate by command above as members or admins or bots (there's a limit).
+❯ `{i}addmembers|{i}addadmins|{i}addbots`
+Adding members to your current group/channel from saved csv files generate by command above as members or admins or bots (there's a limit).
 
-• `{i}limit`
-↳ : Check your account was limit or not.
+❯ `{i}limit`
+Check your account was limit or not.
 """,
         ]
     }

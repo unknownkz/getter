@@ -65,7 +65,7 @@ async def _repeat(e):
         return await e.try_delete()
     try:
         count = int(count)
-    except BaseException:
+    except ValueError:
         count = 1
     txt = rep.text
     text = txt + "\n"
@@ -221,56 +221,56 @@ HELP.update(
     {
         "text": [
             "Text",
-            """• `{i}noformat <reply>`
-↳ : Convert replied message without format.
+            """❯ `{i}noformat <reply>`
+Convert replied message without format.
 
-• `{i}nospace <reply>`
-↳ : Remove all spaces in text.
+❯ `{i}nospace <reply>`
+Remove all spaces in text.
 
-• `{i}repeat <count> <reply>`
-↳ : Repeat text in replied message.
+❯ `{i}repeat <count> <reply>`
+Repeat text in replied message.
 
-• `{i}count <text/reply>`
-↳ : Count words in text message.
+❯ `{i}count <text/reply>`
+Count words in text message.
 
-• `{i}upper <text/reply>`
-↳ : Convert text to upper case.
+❯ `{i}upper <text/reply>`
+Convert text to upper case.
 
-• `{i}lower <text/reply>`
-↳ : Convert text to lower case.
+❯ `{i}lower <text/reply>`
+Convert text to lower case.
 
-• `{i}title <text/reply>`
-↳ : Convert text to title case.
+❯ `{i}title <text/reply>`
+Convert text to title case.
 
-• `{i}capital <text/reply>`
-↳ : Convert first word to capital.
+❯ `{i}capital <text/reply>`
+Convert first word to capital.
 
-• `{i}camel <text/reply>`
-↳ : Convert text to camel case.
+❯ `{i}camel <text/reply>`
+Convert text to camel case.
 
-• `{i}snake <text/reply>`
-↳ : Convert text to snake case.
+❯ `{i}snake <text/reply>`
+Convert text to snake case.
 
-• `{i}kebab <text/reply>`
-↳ : Convert text to kebab case.
+❯ `{i}kebab <text/reply>`
+Convert text to kebab case.
 
-• `{i}b64encode|{i}b64e <text/reply>`
-↳ : Encode text into Base64.
+❯ `{i}b64encode|{i}b64e <text/reply>`
+Encode text into Base64.
 
-• `{i}b64decode|{i}b64d <text/reply>`
-↳ : Decode Base64 data.
+❯ `{i}b64decode|{i}b64d <text/reply>`
+Decode Base64 data.
 
-• `{i}morse <text/reply>`
-↳ : Encode text into Morse code.
+❯ `{i}morse <text/reply>`
+Encode text into Morse code.
 
-• `{i}unmorse <text/reply>`
-↳ : Decode Morse code.
+❯ `{i}unmorse <text/reply>`
+Decode Morse code.
 
-• `{i}roman <text/reply>`
-↳ : Convert an number to roman numeral.
+❯ `{i}roman <text/reply>`
+Convert an number to roman numeral.
 
-• `{i}unroman <text/reply>`
-↳ : Convert roman numeral to number.
+❯ `{i}unroman <text/reply>`
+Convert roman numeral to number.
 """,
         ]
     }

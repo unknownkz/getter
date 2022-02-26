@@ -17,11 +17,11 @@ from time import time
 from heroku3 import from_key
 from telethon import functions
 from . import (
-    DEVS,
-    HELP,
     StartTime,
     Root,
     Var,
+    DEVS,
+    HELP,
     hl,
     eor,
     kasta_cmd,
@@ -93,7 +93,7 @@ async def _(e):
         Kst = await e.eor("`Getting...`", silent=True)
         if is_devs:
             await sleep(randrange(4, 6))
-        if opt in ["heroku", "h"]:
+        if opt in ["heroku", "hk", "h"]:
             await heroku_logs(Kst)
         else:
             await Kst.reply("Terminal Logs", file="app.log", silent=True)
@@ -143,26 +143,26 @@ HELP.update(
     {
         "devs": [
             "Devs",
-            """• `{i}deak|{i}deac`
-↳ : Give a link Deactivated Account.
+            """❯ `{i}deak|{i}deac`
+Give a link Deactivated Account.
 
-• `{i}dc`
-↳ : Finds the nearest datacenter from your server.
+❯ `{i}dc`
+Finds the nearest datacenter from your server.
 
-• `{i}ping|ping|Ping`
-↳ : Check response time.
+❯ `{i}ping|ping|Ping`
+Check response time.
 
-• `{i}logs`
-↳ : Get the full terminal logs.
+❯ `{i}logs`
+Get the full terminal logs.
 
-• `{i}logs <heroku|h>`
-↳ : Get the latest 100 lines of heroku logs.
+❯ `{i}logs <heroku|hk|h>`
+Get the latest 100 lines of heroku logs.
 
-• `{i}restart`
-↳ : Restart the app.
+❯ `{i}restart`
+Restart the app.
 
-• `{i}json <reply>`
-↳ : Get the json encoding of the message.
+❯ `{i}json <reply>`
+Get the json encoding of the message.
 """,
         ]
     }

@@ -16,11 +16,11 @@ from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 from heroku3 import from_key
 from . import (
+    __version__,
+    Root,
     DEVS,
     HELP,
-    Root,
     Var,
-    __version__,
     eor,
     eod,
     hl,
@@ -30,11 +30,11 @@ from . import (
 
 UPDATE_LOCK = Lock()
 off_repo = "https://github.com/kastaid/getter"
-help_text = f"""• `{hl}update <now|pull|one>`
-↳ : Temporary update as locally if available from repo.
+help_text = f"""❯ `{hl}update <now|pull|one>`
+Temporary update as locally if available from repo.
 
-• `{hl}update <deploy|push|all>`
-↳ : Permanently update as heroku, will forced deploy.
+❯ `{hl}update <deploy|push|all>`
+Permanently update as heroku, will forced deploy.
 """
 
 
@@ -64,41 +64,47 @@ async def print_changelogs(Kst, changelog):
 
 async def pulling(Kst):
     await runner("git pull -f && pip3 install -r requirements.txt")
-    await eod(Kst, "`[PULL] Update Successfully, Rebooting... Wait for a minute!`")
+    await Kst.edit(
+        f"`[PULL] Successfully, Rebooting... Wait for a few seconds, then check alive by using the {hl}ping command.`"
+    )
     execl(executable, executable, "-m", "getter")
     return
 
 
 async def pushing(Kst, repo, ups_rem, ac_br, txt):
-    if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-        await eod(Kst, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in Config Vars.")
+    if not Var.HEROKU_API:
+        await eod(Kst, "Please set `HEROKU_API` in Config Vars.")
+        return
+    if not Var.HEROKU_APP_NAME:
+        await eod(Kst, "Please set `HEROKU_APP_NAME` in Config Vars.")
         return
     heroku = from_key(Var.HEROKU_API)
-    heroku_app = None
-    heroku_applications = heroku.apps()
-    for app in heroku_applications:
-        if app.name == Var.HEROKU_APP_NAME:
-            heroku_app = app
-            break
-    if not heroku_app:
-        await eod(Kst, f"{txt}\n`Invalid Heroku credentials for deploying app.`")
-        repo.__del__()
+    try:
+        heroku_app = heroku.apps()[Var.HEROKU_APP_NAME]
+    except KeyError:
+        await eod(Kst, f"{txt}\n`HEROKU_APP_NAME config is invalid! Make sure an app with that name exists.`")
+        return
+    except Exception as err:
+        await eod(Kst, f"{txt}\n```{err}```")
         return
     ups_rem.fetch(ac_br)
     repo.git.reset("--hard", "FETCH_HEAD")
-    heroku_git_url = heroku_app.git_url.replace("https://", "https://api:" + Var.HEROKU_API + "@")
+    heroku_remote_url = heroku_app.git_url.replace("https://", f"https://api:{Var.HEROKU_API}@")
+    remote = None
     if "heroku" in repo.remotes:
         remote = repo.remote("heroku")
-        remote.set_url(heroku_git_url)
+        remote.set_url(heroku_remote_url)
     else:
-        remote = repo.create_remote("heroku", heroku_git_url)
+        remote = repo.create_remote("heroku", heroku_remote_url)
     with suppress(BaseException):
         remote.push(refspec="HEAD:refs/heads/main", force=True)
     build = heroku_app.builds(order_by="created_at", sort="desc")[0]
     if build.status == "failed":
         await eod(Kst, "`Deploy failed, detected some errors...`")
         return
-    await eod(Kst, "`[PUSH] Update Successfully, Rebooting... Wait for a minute!`")
+    await Kst.edit(
+        f"`[PUSH] Update Successfully, Rebooting... Try check alive by using the {hl}ping command after a few minutes.`"
+    )
     return
 
 
@@ -132,23 +138,14 @@ async def _(e):
         Kst = await eor(e, "`Fetching...`", silent=True)
         if is_devs:
             await sleep(randrange(2, 4))
-        """
-        if is_deploy:
-            with suppress(BaseException):
-                from os import chdir
-                chdir("/app")
-                await runner("rm -rf .git")
-        """
         try:
             txt = "**Oops... Updater cannot continue due to some problems occured.**\n"
             repo = Repo()
         except NoSuchPathError as err:
             await Kst.edit(f"{txt}\n`directory {err} is not found`")
-            Repo().__del__()
             return
         except GitCommandError as err:
             await Kst.edit(f"{txt}\n`Early failure! {err}`")
-            Repo().__del__()
             return
         except InvalidGitRepositoryError:
             repo = Repo.init()
@@ -165,20 +162,19 @@ async def _(e):
         if is_deploy:
             if is_devs:
                 await sleep(randrange(4, 6))
-            await Kst.edit("`Deploying, please wait...`")
+            await Kst.edit("`Pushing, please wait...`")
             await pushing(Kst, repo, ups_rem, ac_br, txt)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
         if not changelog:
-            await eor(Kst, f"Getter v{__version__} **up-to-date** as `{ac_br}`", time=15)
-            repo.__del__()
+            await eor(Kst, f"Getter v{__version__}  **up-to-date**  as `{ac_br}`", time=15)
             return
         if not mode:
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
         if is_now:
-            await Kst.edit("`Updating, plase wait...`")
+            await Kst.edit("`Pulling, plase wait...`")
             await pulling(Kst)
         return
 
@@ -197,17 +193,17 @@ HELP.update(
     {
         "updater": [
             "Updater",
-            """• `{i}update`
-↳ : Checks for updates, also displaying the changelog.
+            """❯ `{i}update`
+Checks for updates, also displaying the changelog.
 
-• `{i}update <now|pull|one>`
-↳ : Temporary update as locally if available from repo.
+❯ `{i}update <now|pull|one>`
+Temporary update as locally if available from repo.
 
-• `{i}update <deploy|push|all>`
-↳ : Permanently update as heroku, will forced deploy.
+❯ `{i}update <deploy|push|all>`
+Permanently update as heroku, will forced deploy.
 
-• `{i}repo`
-↳ : Get repo link.
+❯ `{i}repo`
+Get repo link.
 """,
         ]
     }

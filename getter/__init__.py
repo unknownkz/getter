@@ -15,7 +15,7 @@ from sys import exit, platform, version_info
 from time import time
 
 StartTime = time()
-__version__ = "0.2.6"
+__version__ = "0.2.7"
 
 if not platform.startswith("linux"):
     print("MUST be use Linux platform, currently {}. Quitting...".format(platform))
@@ -29,8 +29,8 @@ Root: Path = Path(__file__).parent.parent
 
 dirs = ["downloads"]
 for _ in dirs:
-    if not Path(_).exists():
-        Path(_).mkdir(parents=True, exist_ok=True)
+    if not (Root / _).exists():
+        (Root / _).mkdir(parents=True, exist_ok=True)
     else:
         for f in (Root / _).rglob("*.*"):
             if f.exists():
@@ -41,5 +41,4 @@ for _ in Root.rglob("*s_list.csv*"):
 
 LOOP = get_event_loop()
 HELP = {}
-CMD_LIST = {}
 DEVS = list(map(int, b64decode("MjAwMzM2MTQxMCA1MDY4Mzc5NjY3IDUwNzUxMDE2MTAgNTA3MDkxMTI1OQ==").split()))  # v, e, t, v

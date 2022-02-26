@@ -95,11 +95,11 @@ HELP.update(
     {
         "globals": [
             "Globals",
-            """• `{i}gcast <text/reply>`
-↳ : Send broadcast messages to all groups.
+            """❯ `{i}gcast <text/reply>`
+Send broadcast messages to all groups.
 
-• `{i}gadmincast <text/reply>`
-↳ : Same as above, but only in your admin groups.
+❯ `{i}gadmincast <text/reply>`
+Same as above, but only in your admin groups.
 
 **DWYOR ~ Do With Your Own Risk!**
 """,

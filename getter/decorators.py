@@ -10,9 +10,7 @@
 from asyncio import CancelledError, sleep
 from contextlib import suppress
 from datetime import datetime, timezone
-from inspect import stack
 from io import BytesIO
-from pathlib import Path
 from platform import python_version
 from re import compile
 from sys import exc_info, exit
@@ -30,7 +28,7 @@ from telethon.errors import (
     MessageIdInvalidError,
     MessageNotModifiedError,
 )
-from getter import __version__, CMD_LIST
+from getter import __version__
 from .app import App
 from .config import HANDLER
 from .logger import LOGS
@@ -67,12 +65,7 @@ def kasta_cmd(pattern=None, **kwargs):
             except FloodWaitError as e:
                 FLOOD_WAIT = e.seconds
                 FLOOD_WAIT_HUMAN = time_formatter((FLOOD_WAIT + 5) * 1000)
-                LOGS.error(
-                    "A FloodWait Error of {}. Sleeping for {} and try again.".format(
-                        FLOOD_WAIT,
-                        FLOOD_WAIT_HUMAN,
-                    )
-                )
+                LOGS.error(f"A FloodWait Error of {FLOOD_WAIT}. Sleeping for {FLOOD_WAIT_HUMAN} and try again.")
                 with suppress(BaseException):
                     await check.delete()
                 await sleep(FLOOD_WAIT + 5)
@@ -90,12 +83,11 @@ def kasta_cmd(pattern=None, **kwargs):
                 ConnectionError,
                 KeyboardInterrupt,
                 SystemExit,
-                ValueError,
             ):
                 pass
             except AuthKeyDuplicatedError:
                 LOGS.error("STRING_SESSION expired, please create new! Quitting...")
-                exit()
+                exit(0)
             except events.StopPropagation:
                 raise events.StopPropagation
             except Exception as e:
@@ -137,7 +129,12 @@ def kasta_cmd(pattern=None, **kwargs):
                                     allow_cache=False,
                                 )
                         else:
-                            await App.send_message(chat_id, ftext, link_preview=False, silent=True)
+                            await App.send_message(
+                                chat_id,
+                                ftext,
+                                link_preview=False,
+                                silent=True,
+                            )
 
         cmd = None
         is_own = True if own and senders else False
@@ -157,12 +154,6 @@ def kasta_cmd(pattern=None, **kwargs):
                 pattern=cmd,
             ),
         )
-        file = Path(stack()[1].filename)
-        if pattern:
-            if CMD_LIST.get(file.stem):
-                CMD_LIST[file.stem].append(pattern)
-            else:
-                CMD_LIST.update({file.stem: [pattern]})
         return wrapper
 
     return decorator
