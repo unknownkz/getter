@@ -24,7 +24,7 @@ from . import (
     eod,
     hl,
     kasta_cmd,
-    runner,
+    Runner,
 )
 
 UPDATE_LOCK = Lock()
@@ -63,7 +63,7 @@ async def print_changelogs(Kst, changelog):
 
 
 async def pulling(Kst):
-    await runner("git pull -f && pip3 install -r requirements.txt")
+    await Runner("git pull -f && pip3 install -r requirements.txt")
     await Kst.edit(
         f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
@@ -139,7 +139,7 @@ async def _(e):
                 return
         Kst = await eor(e, "`Fetching...`", silent=True)
         if is_devs:
-            await sleep(choice([2, 3, 4]))
+            await sleep(choice((2, 3, 4)))
         try:
             repo = Repo()
         except NoSuchPathError as err:
@@ -164,7 +164,7 @@ async def _(e):
         ups_rem.fetch(ac_br)
         if is_deploy:
             if is_devs:
-                await sleep(choice([4, 5, 6]))
+                await sleep(choice((4, 5, 6)))
             await Kst.edit("`PUSHING... Please wait.`")
             await pushing(Kst, repo, ups_rem, ac_br)
             return

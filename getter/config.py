@@ -8,8 +8,8 @@
 # ================================================================
 
 from os import getenv
-from zoneinfo import ZoneInfo
 from dotenv import find_dotenv, load_dotenv
+from pytz import timezone
 from .logger import LOGS
 
 load_dotenv(find_dotenv("config.env"))
@@ -30,16 +30,16 @@ def tobool(val):
 
 class Var:
     DEV_MODE = tobool(getenv("DEV_MODE", "False"))
-    STRING_SESSION = getenv("STRING_SESSION" "")
-    API_ID = int(getenv("API_ID", "0"))
-    API_HASH = getenv("API_HASH", "")
+    STRING_SESSION = getenv("STRING_SESSION" "").strip()
+    API_ID = int(getenv("API_ID", "0").strip())
+    API_HASH = getenv("API_HASH", "").strip()
     HANDLER = getenv("HANDLER", ".")
-    TZ = getenv("TZ", "Asia/Jakarta")
+    TZ = getenv("TZ", "Asia/Jakarta").strip()
     HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
     HEROKU_API = getenv("HEROKU_API", None)
 
 
-TZ = ZoneInfo(Var.TZ)  # python 3.9
+TZ = timezone(Var.TZ)
 if not (
     Var.HANDLER.startswith(
         (

@@ -15,7 +15,6 @@ from secrets import choice
 from time import time
 import psutil as psu
 from heroku3 import from_key
-from requests import get
 from . import (
     StartTime,
     Var,
@@ -23,6 +22,7 @@ from . import (
     humanbytes,
     kasta_cmd,
     time_formatter,
+    Searcher,
 )
 
 usage = """
@@ -32,9 +32,9 @@ usage = """
 
 **⚙️ Dyno Usage ⚙️**
 -> **Dyno usage for** `{}`:
-  •  **{}h**  **{}m |** `[{}%]`
+  •  **{}hour(s)**  **{}minute(s) |** `[{}%]`
 -> **Dyno hours quota remaining this month:**
-  •  **{}h**  **{}m |** `[{}%]`
+  •  **{}hour(s)**  **{}minute(s) |** `[{}%]`
 
 **💾 Disk Space 💾**
 **Total:** `{}`
@@ -71,7 +71,7 @@ usage_simple = """
 **DISK:** `{}`
 """
 
-some_random_headers = [
+useragent = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/72.0.3626.121 Safari/537.36",
@@ -106,7 +106,7 @@ async def _(e):
         except IndexError:
             return await Kst.edit(simple_usage())
         if opt in ["heroku", "hk", "h"]:
-            is_hk, hk = heroku_usage()
+            is_hk, hk = await heroku_usage()
             await Kst.edit(hk)
         else:
             await Kst.edit(simple_usage())
@@ -143,31 +143,27 @@ def simple_usage():
     )
 
 
-def heroku_usage():
-    if HEROKU_API is None and HEROKU_APP_NAME is None:
+async def heroku_usage():
+    if not (HEROKU_API and HEROKU_APP_NAME):
         return False, "Please set `HEROKU_APP_NAME` and `HEROKU_API` in Config Vars."
     user_id = Heroku.account().id
     headers = {
-        "User-Agent": choice(some_random_headers),
+        "User-Agent": choice(useragent),
         "Authorization": f"Bearer {heroku_api}",
         "Accept": "application/vnd.heroku+json; version=3.account-quotas",
     }
-    her_url = f"https://api.heroku.com/accounts/{user_id}/actions/get-quota"
-    r = get(her_url, headers=headers)
-    if r.status_code != 200:
-        return (
-            True,
-            f"**ERROR**\n`{r.reason}`",
-        )
-    result = r.json()
-    quota = result["account_quota"]
-    quota_used = result["quota_used"]
+    base_url = f"https://api.heroku.com/accounts/{user_id}/actions/get-quota"
+    res = await Searcher(base_url, headers=headers, re_json=True)
+    if not res:
+        return (True, "`Try again now!`")
+    quota = res["account_quota"]
+    quota_used = res["quota_used"]
     remaining_quota = quota - quota_used
     percentage = floor(remaining_quota / quota * 100)
     minutes_remaining = remaining_quota / 60
     hours = floor(minutes_remaining / 60)
     minutes = floor(minutes_remaining % 60)
-    App = result["apps"]
+    App = res["apps"]
     try:
         App[0]["quota_used"]
     except IndexError:

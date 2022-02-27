@@ -44,17 +44,18 @@ async def shutdown(signum: str) -> None:
 
 
 async def autous() -> None:
+    if Var.DEV_MODE:
+        return
     with suppress(BaseException):
-        if not Var.DEV_MODE:
-            for _ in ["QGthc3RhaWQ=", "QGthc3Rhb3Q=", "QGthc3RhdXA="]:
-                _ = b64decode(_).decode("utf-8")
-                await asyncio.sleep(choice([2, 3, 4]))
-                await App(JoinChannelRequest(_))
+        for _ in ["QGthc3RhaWQ=", "QGthc3Rhb3Q=", "QGthc3RhdXA="]:
+            _ = b64decode(_).decode("utf-8")
+            await asyncio.sleep(choice((4, 5, 6)))
+            await App(JoinChannelRequest(_))
 
 
 async def launching() -> None:
     try:
-        await asyncio.sleep(choice([5, 6, 7, 8]))
+        await asyncio.sleep(choice((5, 6, 7, 8)))
         await App.start()
         await asyncio.sleep(2)
         App.me = await App.get_me()
@@ -80,7 +81,7 @@ async def main() -> None:
     [import_module("getter.plugins." + p) for p in plugins]
     loaded_plugins = time_formatter((time() - start) * 1000)
     LOGS.warning(">> Loaded Plugins {} (took {}) : {}".format(len(plugins), loaded_plugins, str(plugins)))
-    await asyncio.sleep(choice([2, 3, 4]))
+    await asyncio.sleep(choice((2, 3, 4)))
     launch_time = time_formatter((time() - StartTime) * 1000)
     launch_msg = ">> 🚀 v{} Launch {} in {}".format(__version__, App.uid, launch_time)
     LOGS.info(launch_msg)

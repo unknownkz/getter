@@ -227,7 +227,7 @@ Delete a messages.
 Purge all messages from the replied message.
 
 ❯ `{i}purgeme <reply>`
-Purge Only your messages from the replied message.
+Purge only your messages from the replied message.
 
 ❯ `{i}id|{i}ids`
 Get current Chat/User/Message ID.

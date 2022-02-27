@@ -23,7 +23,6 @@ from . import (
     DEVS,
     HELP,
     hl,
-    eor,
     kasta_cmd,
     parse_pre,
     time_formatter,
@@ -75,7 +74,7 @@ async def _(e):
     if hasattr(e, "text") and e.text.lower() not in [f"{hl}ping", "ping"]:
         return
     start = time()
-    Kst = await eor(e, "Ping !")
+    Kst = await e.eor("Ping !")
     end = round((time() - start) * 1000)
     uptime = time_formatter((time() - StartTime) * 1000)
     await Kst.edit(
@@ -92,7 +91,7 @@ async def _(e):
         opt = e.pattern_match.group(1)
         Kst = await e.eor("`Getting...`", silent=True)
         if is_devs:
-            await sleep(choice([4, 5, 6]))
+            await sleep(choice((4, 5, 6)))
         if opt in ["heroku", "hk", "h"]:
             await heroku_logs(Kst)
         else:

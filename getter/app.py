@@ -16,7 +16,7 @@ from .logger import LOGS
 
 session = ""
 if Var.STRING_SESSION:
-    if len(Var.STRING_SESSION.strip()) != 353:
+    if len(Var.STRING_SESSION) != 353:
         LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")
         sys.exit(1)
     session = StringSession(str(Var.STRING_SESSION))

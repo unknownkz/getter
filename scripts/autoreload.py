@@ -41,7 +41,7 @@ Root: Path = Path(__file__).parent.parent
 def file_times() -> Generator[int, None, None]:
     ext = [".py", ".yml", ".env"]
     with suppress(BaseException):
-        for f in filter(lambda p: p.suffix in ext, Path(Root).rglob("*")):
+        for f in filter(lambda p: p.suffix in ext, (Root).rglob("*")):
             yield f.stat().st_mtime
 
 

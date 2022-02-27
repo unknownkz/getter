@@ -35,8 +35,8 @@ from .logger import LOGS
 from .utils import (
     display_name,
     md_to_text,
-    runner,
     time_formatter,
+    Runner,
 )
 
 
@@ -111,8 +111,8 @@ def kasta_cmd(pattern=None, **kwargs):
                     ftext += "`\n\n**Error Text:**`\n"
                     ftext += str(sys.exc_info()[1])
                     ftext += "`\n\n--------END GETTER CRASH LOG--------"
-                    ftext += "\n\n\n**Last 3 Commits:**`\n"
-                    stdout, stderr = await runner('git log --pretty=format:"%an: %s" -3')
+                    ftext += "\n\n\n**Last 5 Commits:**`\n"
+                    stdout, stderr = await Runner('git log --pretty=format:"%an: %s" -5')
                     result = stdout + stderr
                     ftext += result + "`"
 

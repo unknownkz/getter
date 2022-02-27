@@ -10,18 +10,48 @@
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
+from re import sub
 from secrets import choice
 from time import time
 from telethon.errors import FloodWaitError
 from . import (
     DEVS,
     HELP,
-    eor,
-    eod,
     kasta_cmd,
     time_formatter,
-    NOSPAM_CHAT,
+    Searcher,
 )
+
+
+async def nospam_chat():
+    base_url = "https://raw.githubusercontent.com/kastaid/resources/main/gcastblacklist.py"
+    count = 0
+    retry = 6
+    while count < retry:
+        r = await Searcher(base_url, re_content=True)
+        count += 1
+        if not r:
+            if count != retry:
+                await sleep(1)
+                continue
+            ids = [
+                -1001699144606,  # @kastaot
+                -1001700971911,  # @kastaup
+                -1001596433756,  # @MFIChat
+                -1001294181499,  # @userbotindo
+                -1001387666944,  # @PyrogramChat
+                -1001221450384,  # @pyrogramlounge
+                -1001109500936,  # @TelethonChat
+                -1001235155926,  # @RoseSupportChat
+                -1001421589523,  # @tdspya
+                -1001360494801,  # @OFIOpenChat
+                -1001435671639,  # @xfichat
+            ]
+            break
+        _ = r"(\[|\]|#.[\w]*|,)"
+        ids = set(int(x) for x in sub(_, " ", "".join(r.decode("utf-8").split())).split())  # noqa: C401
+        break
+    return ids
 
 
 @kasta_cmd(pattern="g(admin|)cast(?: |$)(.*)")
@@ -34,14 +64,15 @@ async def _(e):
     elif e.is_reply:
         content = await e.get_reply_message()
     else:
-        return await eod(e, "`Give some text to Gcast or reply message.`")
+        return await e.eod("`Give some text to Gcast or reply message.`")
     if is_admin:
-        Kst = await eor(e, "⚡ __**Gcasting to groups as admin...**__")
+        Kst = await e.eor("⚡ __**Gcasting to groups as admin...**__")
     else:
-        Kst = await eor(e, "⚡ __**Gcasting to all groups...**__")
+        Kst = await e.eor("⚡ __**Gcasting to all groups...**__")
     start_time = time()
     success = failed = 0
     errors = ""
+    NOSPAM_CHAT = await nospam_chat()
     async for x in e.client.iter_dialogs():
         if x.is_group:
             chat = x.entity.id
@@ -50,13 +81,13 @@ async def _(e):
             ):
                 try:
                     await e.client.send_message(chat, content)
-                    await sleep(choice([2, 3, 4]))
+                    await sleep(choice((2, 3, 4)))
                     success += 1
                 except FloodWaitError as fw:
                     await sleep(fw.seconds + 10)
                     try:
                         await e.client.send_message(chat, content)
-                        await sleep(choice([2, 3, 4]))
+                        await sleep(choice((2, 3, 4)))
                         success += 1
                     except Exception as err:
                         errors += f"• {err}\n"
@@ -65,18 +96,12 @@ async def _(e):
                     errors += "• " + str(err) + "\n"
                     failed += 1
     taken = time_formatter((time() - start_time) * 1000)
-    if is_admin:
-        text = r"\\**#Gcast**// in `{}` to `{}` groups as admin, failed `{}` groups.".format(
-            taken,
-            success,
-            failed,
-        )
-    else:
-        text = r"\\**#Gcast**// in `{}` to `{}` groups, failed `{}` groups.".format(
-            taken,
-            success,
-            failed,
-        )
+    text = r"\\**#Gcast**// `{}` to `{}` {}, failed `{}` groups.".format(
+        taken,
+        success,
+        "groups as admin" if is_admin else "groups",
+        failed,
+    )
     with suppress(BaseException):
         if errors != "":
             with BytesIO(str.encode(errors)) as file:

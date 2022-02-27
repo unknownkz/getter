@@ -27,7 +27,7 @@ async def _(e):
         return
     lang = e.text[4:6] or "id"
     txt = e.text[7:]
-    Kst = await e.eor("`Translate...`")
+    Kst = await e.eor("`...`")
     if txt:
         text = txt
     elif e.is_reply:
@@ -58,7 +58,7 @@ async def _(e):
         return await e.try_delete()
     lang = e.text[5:7] or "id"
     txt = e.text[8:]
-    Kst = await e.eor("`Speech Synthesis...`")
+    Kst = await e.eor("`...`")
     if txt:
         text = txt
     elif e.is_reply:

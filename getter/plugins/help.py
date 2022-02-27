@@ -25,25 +25,23 @@ from . import (
 help_text = """
 █▀▀ █▀▀ ▀█▀ ▀█▀ █▀▀ █▀█
 █▄█ ██▄ ░█░ ░█░ ██▄ █▀▄
-
 ┏━━━━━━━━━━━━━━━━━━━━━━━━
-┣  <b>User</b> - <code>{}</code>
-┣  <b>ID</b> - <code>{}</code>
-┣  <b>Heroku App Name</b> - <code>{}</code>
-┣  <b>Getter Version</b> - <code>{}</code>
-┣  <b>Python Version</b> - <code>{}</code>
-┣  <b>Telethon Version</b> - <code>{}</code>
-┣  <b>Uptime</b> - <code>{}</code>
-┣  <b>Handler</b> - <code>{}</code>
-┣  <b>Plugins</b> - <code>{}</code>
-┣  <b>Usage</b> - <code>{}help &lt;plugin name&gt;</code>
+┣  <b>User</b> – <code>{}</code>
+┣  <b>ID</b> – <code>{}</code>
+┣  <b>Heroku App Name</b> – <code>{}</code>
+┣  <b>Getter Version</b> – <code>{}</code>
+┣  <b>Python Version</b> – <code>{}</code>
+┣  <b>Telethon Version</b> – <code>{}</code>
+┣  <b>Uptime</b> – <code>{}</code>
+┣  <b>Handler</b> – <code>{}</code>
+┣  <b>Plugins</b> – <code>{}</code>
+┣  <b>Usage</b> – <code>{}help &lt;plugin name&gt;</code>
 ┗━━━━━━━━━━━━━━━━━━━━━━━━
-
 <b>~ All plugins and commands are below:</b>
 
 {}
 
-<b>Example:</b> Type <code>{}help core</code> for usage.
+<b>Example:</b> Type <pre>{}help core</pre> for usage.
 """
 
 
@@ -65,8 +63,8 @@ async def _(e):
     else:
         uptime = time_formatter((time() - StartTime) * 1000)
         plugins = ""
-        for p in HELP:
-            plugins += f"<code>{p.strip()}</code>  |  "
+        for _ in HELP:
+            plugins += f"<code>{_}</code>  ★  "
         plugins = plugins[:-3]
         me = await e.client.get_me()
         text = help_text.format(

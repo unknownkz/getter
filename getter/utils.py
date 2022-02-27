@@ -89,7 +89,7 @@ def time_formatter(ms: Union[int, str]) -> str:
         return "0s"
 
 
-async def runner(cmd: str) -> (bytes, bytes):
+async def Runner(cmd: str) -> (bytes, bytes):
     process = await asyncio.create_subprocess_shell(
         cmd,
         stdout=asyncio.subprocess.PIPE,
@@ -101,7 +101,7 @@ async def runner(cmd: str) -> (bytes, bytes):
     return out, err
 
 
-async def searcher(
+async def Searcher(
     url: str,
     post: bool = None,
     headers: dict = None,
@@ -114,12 +114,17 @@ async def searcher(
     real: bool = False,
 ):
     async with ClientSession(headers=headers) as client:
-        if post:
-            data = await client.post(url, json=json, data=data, ssl=ssl)
-        else:
-            data = await client.get(url, params=params, ssl=ssl)
+        try:
+            if post:
+                data = await client.post(url, json=json, data=data, ssl=ssl)
+            else:
+                data = await client.get(url, params=params, ssl=ssl)
+        except asyncio.exceptions.TimeoutError:
+            return None
+        if data.status == 404 or data.status not in (200, 201):
+            return None
         if re_json:
-            return await data.json()
+            return await data.json(content_type=None)
         if re_content:
             return await data.read()
         if real:

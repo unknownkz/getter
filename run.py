@@ -63,7 +63,7 @@ def lint() -> None:
 
 class CapitalisedHelpFormatter(HelpFormatter):
     def add_usage(self, usage, actions, groups, prefix=None):
-        if prefix is None:
+        if not prefix:
             prefix = "Usage: "
         return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix)
 
@@ -90,14 +90,12 @@ def main() -> None:
     if args.prod:
         print(f"{BOLD}{GREEN}[ PRODUCTION MODE ]{RST}")
         clean()
-
         print(f"{BOLD}{BLUE}> {app}{RST}")
         run_command(app)
 
     elif args.dev:
         print(f"{BOLD}{GREEN}[ DEVELOPMENT MODE ]{RST}")
         clean()
-
         lint()
         print(f"{BOLD}{BLUE}> {app}{RST}")
         run_command(app)
@@ -105,7 +103,6 @@ def main() -> None:
     elif args.watch:
         print(f"{BOLD}{GREEN}[ WATCHED DEVELOPMENT MODE ]{RST}")
         clean()
-
         print(f"{BOLD}{BLUE}> {app_watch}{RST}")
         run_command(app_watch)
 

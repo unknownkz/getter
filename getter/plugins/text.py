@@ -14,7 +14,7 @@ from . import (
     HELP,
     kasta_cmd,
     parse_pre,
-    searcher,
+    Searcher,
 )
 
 
@@ -199,7 +199,9 @@ async def _morse(e):
     _ = "encode" if cmd == "morse" else "decode"
     msg = await e.eor("`...`")
     base_url = f"https://apis.xditya.me/morse/{_}?text=" + Kst
-    text = await searcher(base_url, re_content=False)
+    text = await Searcher(base_url, re_content=False)
+    if not text:
+        return await msg.eod("`Try again now!`")
     await msg.edit(text)
 
 
@@ -212,7 +214,9 @@ async def _roman(e):
         return await e.try_delete()
     msg = await e.eor("`...`")
     base_url = "https://romans.justyy.workers.dev/api/romans/?cached&n=" + Kst
-    text = await searcher(base_url, re_json=True)
+    text = await Searcher(base_url, re_json=True)
+    if not text:
+        return await msg.eod("`Try again now!`")
     text = str(text.get("result"))
     await msg.edit(text)
 

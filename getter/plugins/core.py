@@ -120,7 +120,7 @@ async def limit(e, conv):
 @kasta_cmd(own=True, senders=DEVS, pattern="glimit$")
 async def _(e):
     with suppress(BaseException):
-        Kst = await eor(e, "`Checking...`", silent=True)
+        Kst = await e.eor("`Checking...`", silent=True)
         async with e.client.conversation(spamb) as conv:
             resp = await limit(e, conv)
             await Kst.edit("~ " + resp)
@@ -427,7 +427,7 @@ async def _(e):
                 await e.client(InviteUser(channel=chat, users=[adding]))
                 success += 1
                 await Kst.edit(f"`Adding {success} {mode}...`")
-                await sleep(choice([4, 5, 6]))
+                await sleep(choice((4, 5, 6)))
             except BaseException:
                 pass
         taken = time_formatter((time() - start_time) * 1000)
@@ -438,7 +438,7 @@ async def _(e):
 @kasta_cmd(own=True, senders=DEVS, pattern="gtest$")
 async def _(e):
     if not (hasattr(e, "out") and e.out):
-        await sleep(choice([2, 3, 4]))
+        await sleep(choice((2, 3, 4)))
     uptime = time_formatter((time() - StartTime) * 1000)
     # http://www.timebie.com/std/utc.php
     Kst = "**Getter Version:** `{}`\n**ID:** `{}`\n**Uptime:** `{}`\n**UTC Now:** `{}`".format(
@@ -447,7 +447,7 @@ async def _(e):
         uptime,
         datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M:%S"),
     )
-    await eor(e, Kst, force_reply=True, silent=True)
+    await e.eor(Kst, force_reply=True, silent=True)
 
 
 HELP.update(
