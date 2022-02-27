@@ -32,9 +32,9 @@ usage = """
 
 **⚙️ Dyno Usage ⚙️**
 -> **Dyno usage for** `{}`:
-  •  **{}hour(s)**  **{}minute(s) |** `[{}%]`
+  •  **{} hour(s)**  **{} minute(s) |** `[{}%]`
 -> **Dyno hours quota remaining this month:**
-  •  **{}hour(s)**  **{}minute(s) |** `[{}%]`
+  •  **{} hour(s)**  **{} minute(s) |** `[{}%]`
 
 **💾 Disk Space 💾**
 **Total:** `{}`
