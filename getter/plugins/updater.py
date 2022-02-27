@@ -167,7 +167,7 @@ async def _(e):
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
         if not changelog:
-            await eor(Kst, f"Getter v{__version__}  **up-to-date**  as `{ac_br}`", time=15)
+            await Kst.edit(f"Getter v{__version__}  **up-to-date**  as `{ac_br}`")
             return
         if not mode:
             await print_changelogs(Kst, changelog)

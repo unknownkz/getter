@@ -102,13 +102,15 @@ NOSPAM_CHAT = [
     -1001318017044,  # @tgpaperplane
     -1001062690377,  # @SohbetDoge
     -1001473548283,  # @SharingUserbot
+    -1001433238829,  # @TedeSupport
     -1001459812644,  # @GeezSupport
+    -1001692751821,  # @ramsupportt
     -1001752592753,  # @skyzusupport
     -1001788983303,  # @KayzuSupport
     -1001575341991,  # @KyuraSupport
     -1001578091827,  # @PrimeSupportGroup
+    -1001795125065,  # @allfucek
     -1001733534088,  # @YukkiSupport
-    -1001433238829,  # @TedeSupport
     -1001132729899,  # @postgresql_id
     -1001187059777,  # @MongoDB_ID
 ]
