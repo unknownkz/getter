@@ -35,8 +35,8 @@ class Var:
     API_HASH = getenv("API_HASH", "").strip()
     HANDLER = getenv("HANDLER", ".")
     TZ = getenv("TZ", "Asia/Jakarta").strip()
-    HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", None)
-    HEROKU_API = getenv("HEROKU_API", None)
+    HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", "").strip()
+    HEROKU_API = getenv("HEROKU_API", "").strip()
 
 
 TZ = timezone(Var.TZ)

@@ -15,18 +15,18 @@
 
 ```
 #include <std/disclaimer.h>
-/**
-    Your Telegram account may get banned.
-    We are not responsible for any improper use of Paperplane.
-    Paperplane is intended for the purpose of effective group management,
-    PM control as well as having fun with memes.
-    You ended up spamming groups, getting reported left and right,
-    and you ended up in a Finale Battle with Telegram and at the end
-    Telegram Team deleted your account?
-    And after that, then you pointed your fingers at us
-    for getting your acoount deleted?
-    We will be rolling on the floor laughing at you.
-/**
+/*
+*    Your Telegram account may get banned.
+*    We are not responsible for any improper use of this bot
+*    This bot is intended for the purpose of scraping members,
+*    as well as efficiently to get members correctly.
+*    You ended up spamming groups, getting reported left and right,
+*    and you ended up in a Finale Battle with Telegram and at the end
+*    Telegram Team deleted your account?
+*    And after that, then you pointed your fingers at us
+*    for getting your acoount deleted?
+*    I will be rolling on the floor laughing at you.
+*/
 ```
 
 ## Table of Contents
