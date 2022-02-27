@@ -8,10 +8,9 @@
 # ================================================================
 
 from asyncio import Lock, sleep
-from contextlib import suppress
 from os import execl
-from random import randrange
-from sys import executable
+from secrets import choice
+from sys import executable, argv
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 from heroku3 import from_key
@@ -29,7 +28,7 @@ from . import (
 )
 
 UPDATE_LOCK = Lock()
-off_repo = "https://github.com/kastaid/getter"
+off_repo = "https://github.com/kastaid/getter.git"
 help_text = f"""❯ `{hl}update <now|pull|one>`
 Temporary update as locally if available from repo.
 
@@ -39,12 +38,13 @@ Permanently update as heroku, will forced deploy.
 
 
 def gen_chlog(repo, diff):
+    _ = repo.remotes[0].config_reader.get("url").replace(".git", "")
     ac_br = repo.active_branch.name
     ch_log = ""
-    ch = f"<b>Getter v{__version__} updates for <a href={off_repo}/tree/{ac_br}>[{ac_br}]</a>:</b>"
-    d_form = "%d/%m/%y || %H:%M"
+    ch = f"<b>Getter v{__version__} updates for <a href={_}/tree/{ac_br}>[{ac_br}]</a>:</b>"
+    d_form = "%d/%m/%Y %H:%M:%S"
     for c in repo.iter_commits(diff):
-        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={off_repo.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
+        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={_.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
     if ch_log:
         return str(ch + ch_log)
     return ch_log
@@ -65,28 +65,28 @@ async def print_changelogs(Kst, changelog):
 async def pulling(Kst):
     await runner("git pull -f && pip3 install -r requirements.txt")
     await Kst.edit(
-        f"`[PULL] Successfully, Rebooting... Wait for a few seconds, then check alive by using the {hl}ping command.`"
+        f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
-    execl(executable, executable, "-m", "getter")
+    execl(executable, executable, *argv)
     return
 
 
-async def pushing(Kst, repo, ups_rem, ac_br, txt):
+async def pushing(Kst, repo, ups_rem, ac_br):
     if not Var.HEROKU_API:
         await eod(Kst, "Please set `HEROKU_API` in Config Vars.")
-        return
+        return repo.__del__()
     if not Var.HEROKU_APP_NAME:
         await eod(Kst, "Please set `HEROKU_APP_NAME` in Config Vars.")
-        return
+        return repo.__del__()
     heroku = from_key(Var.HEROKU_API)
     try:
         heroku_app = heroku.apps()[Var.HEROKU_APP_NAME]
     except KeyError:
-        await eod(Kst, f"{txt}\n`HEROKU_APP_NAME config is invalid! Make sure an app with that name exists.`")
-        return
+        await eod(Kst, f"`HEROKU_APP_NAME config is invalid! Make sure an app with that name exists.`")
+        return repo.__del__()
     except Exception as err:
-        await eod(Kst, f"{txt}\n```{err}```")
-        return
+        await eod(Kst, f"**Updating Deploy error:**\n```{err}```")
+        return repo.__del__()
     ups_rem.fetch(ac_br)
     repo.git.reset("--hard", "FETCH_HEAD")
     heroku_remote_url = heroku_app.git_url.replace("https://", f"https://api:{Var.HEROKU_API}@")
@@ -96,14 +96,16 @@ async def pushing(Kst, repo, ups_rem, ac_br, txt):
         remote.set_url(heroku_remote_url)
     else:
         remote = repo.create_remote("heroku", heroku_remote_url)
-    with suppress(BaseException):
+    try:
         remote.push(refspec="HEAD:refs/heads/main", force=True)
+    except BaseException:
+        pass
     build = heroku_app.builds(order_by="created_at", sort="desc")[0]
     if build.status == "failed":
-        await eod(Kst, "`Deploy failed, detected some errors...`")
+        await eod(Kst, "`Build Deploy failed, detected some errors...`")
         return
     await Kst.edit(
-        f"`[PUSH] Update Successfully, Rebooting... Try check alive by using the {hl}ping command after a few minutes.`"
+        f"`[PUSH] Update Successfully, Rebooting...`\nTry check alive by using the `{hl}ping` command after a few minutes."
     )
     return
 
@@ -137,16 +139,15 @@ async def _(e):
                 return
         Kst = await eor(e, "`Fetching...`", silent=True)
         if is_devs:
-            await sleep(randrange(2, 4))
+            await sleep(choice([2, 3, 4]))
         try:
-            txt = "**Oops... Updater cannot continue due to some problems occured.**\n"
             repo = Repo()
         except NoSuchPathError as err:
-            await Kst.edit(f"{txt}\n`directory {err} is not found`")
-            return
+            await Kst.edit(f"`Directory {err} is not found`")
+            return Repo().__del__()
         except GitCommandError as err:
-            await Kst.edit(f"{txt}\n`Early failure! {err}`")
-            return
+            await Kst.edit(f"`Early failure! {err}`")
+            return Repo().__del__()
         except InvalidGitRepositoryError:
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
@@ -155,26 +156,28 @@ async def _(e):
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
         ac_br = repo.active_branch.name
-        with suppress(BaseException):
+        try:
             repo.create_remote("upstream", off_repo)
+        except BaseException:
+            pass
         ups_rem = repo.remote("upstream")
         ups_rem.fetch(ac_br)
         if is_deploy:
             if is_devs:
-                await sleep(randrange(4, 6))
-            await Kst.edit("`Pushing, please wait...`")
-            await pushing(Kst, repo, ups_rem, ac_br, txt)
+                await sleep(choice([4, 5, 6]))
+            await Kst.edit("`PUSHING... Please wait.`")
+            await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
         if not changelog:
-            await Kst.edit(f"Getter v{__version__}  **up-to-date**  as `{ac_br}`")
-            return
+            await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
+            return repo.__del__()
         if not mode:
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
         if is_now:
-            await Kst.edit("`Pulling, plase wait...`")
+            await Kst.edit("`PULLING... Plase wait.`")
             await pulling(Kst)
         return
 
@@ -182,7 +185,7 @@ async def _(e):
 @kasta_cmd(pattern="repo$")
 async def _(e):
     await e.eor(
-        f"""
+        """
 • **Repo:** [GitHub](https://kasta.vercel.app/getter_source)
 • **Deploy:** [View at @kastaid](https://kasta.vercel.app/getter_deploy)
 """,

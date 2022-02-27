@@ -8,16 +8,16 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from asyncio import sleep
 from subprocess import check_call
-from sys import exit, executable
 
 try:
     import telethon as tl
 except ModuleNotFoundError:
     print("Installing Telethon...")
     # python3 -m pip install --no-cache-dir Telethon==1.24.0
-    check_call([executable, "-m", "pip", "install", "--no-cache-dir", "Telethon==1.24.0"])
+    check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "Telethon==1.24.0"])
 finally:
     import telethon as tl
 
@@ -58,7 +58,7 @@ try:
     API_ID = int(input("Enter your API_ID here: "))
 except ValueError:
     print(">> API_ID must be an integer.\nQuitting...")
-    exit(0)
+    sys.exit(0)
 API_HASH = input("Enter your API_HASH here: ")
 
 client = tl.TelegramClient(tl.sessions.StringSession(), api_id=API_ID, api_hash=API_HASH)
@@ -74,16 +74,16 @@ async def main() -> None:
         await client.send_message("me", saved_messages)
         await sleep(1)
         print(generated)
-        exit(0)
+        sys.exit(0)
     except tl.errors.ApiIdInvalidError:
         print(">> Your API_ID or API_HASH combination is invalid. Kindly recheck.\nQuitting...")
-        exit(0)
+        sys.exit(0)
     except ValueError:
         print(">> API_HASH must not be empty!\nQuitting...")
-        exit(0)
+        sys.exit(0)
     except tl.errors.PhoneNumberInvalidError:
         print(">> The phone number is invalid!\nQuitting...")
-        exit(0)
+        sys.exit(0)
 
 
 with client:

@@ -11,8 +11,8 @@ from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
 from os import execl, name, system
-from random import randrange
-from sys import executable
+from secrets import choice
+from sys import executable, argv
 from time import time
 from heroku3 import from_key
 from telethon import functions
@@ -92,7 +92,7 @@ async def _(e):
         opt = e.pattern_match.group(1)
         Kst = await e.eor("`Getting...`", silent=True)
         if is_devs:
-            await sleep(randrange(4, 6))
+            await sleep(choice([4, 5, 6]))
         if opt in ["heroku", "hk", "h"]:
             await heroku_logs(Kst)
         else:
@@ -109,7 +109,7 @@ async def _(e):
         await sleep(1)
         await Kst.edit("`Restarting your app, please wait for a minute!`")
         if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-            return execl(executable, executable, "-m", "getter")
+            return execl(executable, executable, *argv)
         try:
             Heroku = from_key(Var.HEROKU_API)
             app = Heroku.apps()[Var.HEROKU_APP_NAME]

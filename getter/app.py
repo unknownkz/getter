@@ -7,7 +7,7 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
-from sys import exit
+import sys
 from telethon import TelegramClient
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 from telethon.sessions import StringSession
@@ -18,11 +18,11 @@ session = ""
 if Var.STRING_SESSION:
     if len(Var.STRING_SESSION.strip()) != 353:
         LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")
-        exit(1)
+        sys.exit(1)
     session = StringSession(str(Var.STRING_SESSION))
 else:
     LOGS.error("STRING_SESSION empty. Please filling! Quitting...")
-    exit(1)
+    sys.exit(1)
 
 try:
     App = TelegramClient(
@@ -37,4 +37,4 @@ try:
     App.parse_mode = "markdown"
 except Exception as e:
     LOGS.exception("[APP] - {}".format(e))
-    exit(1)
+    sys.exit(1)

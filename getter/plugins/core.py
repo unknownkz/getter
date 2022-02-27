@@ -11,7 +11,7 @@ from asyncio import Lock, sleep
 from contextlib import suppress
 from csv import reader as csv_read
 from datetime import datetime, timezone
-from random import randrange
+from secrets import choice
 from time import time
 from aiocsv import AsyncDictReader, AsyncWriter
 from aiofiles import open as aiopen
@@ -427,7 +427,7 @@ async def _(e):
                 await e.client(InviteUser(channel=chat, users=[adding]))
                 success += 1
                 await Kst.edit(f"`Adding {success} {mode}...`")
-                await sleep(randrange(4, 6))
+                await sleep(choice([4, 5, 6]))
             except BaseException:
                 pass
         taken = time_formatter((time() - start_time) * 1000)
@@ -438,7 +438,7 @@ async def _(e):
 @kasta_cmd(own=True, senders=DEVS, pattern="gtest$")
 async def _(e):
     if not (hasattr(e, "out") and e.out):
-        await sleep(randrange(2, 4))
+        await sleep(choice([2, 3, 4]))
     uptime = time_formatter((time() - StartTime) * 1000)
     # http://www.timebie.com/std/utc.php
     Kst = "**Getter Version:** `{}`\n**ID:** `{}`\n**Uptime:** `{}`\n**UTC Now:** `{}`".format(

@@ -7,12 +7,12 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from argparse import SUPPRESS, ArgumentParser, HelpFormatter
 from contextlib import suppress
 from pathlib import Path
 from shlex import split
 from subprocess import run
-from sys import exit
 
 RST = "\x1b[0m"
 BOLD = "\x1b[1m"
@@ -37,9 +37,9 @@ def run_command(cmd) -> None:
         proc = run(split(cmd), shell=False)
         if proc.returncode != 0:
             print(f"Exit code {proc.returncode}")
-            exit(1)
+            sys.exit(1)
     except BaseException:
-        exit(1)
+        sys.exit(1)
 
 
 def clean() -> None:
@@ -113,15 +113,15 @@ def main() -> None:
         print(f"{BOLD}{YELLOW}Run linting and format code...{RST}")
         clean()
         lint()
-        exit(0)
+        sys.exit(0)
 
     elif args.clean:
         clean()
-        exit(0)
+        sys.exit(0)
 
     else:
         print(f"{python} -m run --help")
-        exit(0)
+        sys.exit(0)
 
 
 if __name__ == "__main__":

@@ -2,11 +2,30 @@
 
 > Get and put users (scraping) to the target **group/channel** efficiently, correctly and safety.
 
+```
+#include <std/disclaimer.h>
+/**
+    Your Telegram account may get banned.
+    We are not responsible for any improper use of Paperplane.
+    Paperplane is intended for the purpose of effective group management,
+    PM control as well as having fun with memes.
+    You ended up spamming groups, getting reported left and right,
+    and you ended up in a Finale Battle with Telegram and at the end
+    Telegram Team deleted your account?
+    And after that, then you pointed your fingers at us
+    for getting your acoount deleted?
+    We will be rolling on the floor laughing at you.
+/**
+```
+
 <p align="center">
-    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img src="https://github.com/kastaid/getter/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-    <a href="https://github.com/kastaid/getter/stargazers"><img src="https://img.shields.io/github/stars/kastaid/getter?logo=github" alt="Stars" /></a>
-    <a href="https://github.com/kastaid/getter/network/members"><img src="https://img.shields.io/github/forks/kastaid/getter?logo=github" alt="Forks" /></a>
-    <a href="https://github.com/kastaid/getter/graphs/contributors"><img src="https://img.shields.io/github/contributors/kastaid/getter?color=blue" alt="Contributors" /></a>
+    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/workflow/status/kastaid/getter/CI?logo=github&label=CI" /></a>
+    <a href="https://app.codacy.com/gh/kastaid/getter/dashboard"><img alt="Codacy grade" src="https://img.shields.io/codacy/grade/2f86ed8f8534424c8d4cdaa197dc5ce2?logo=codacy" /></a>
+    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="LICENSE" src="https://img.shields.io/github/license/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/issues"><img alt="Issues" src="https://img.shields.io/github/issues/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/kastaid/getter" /></a>
 </p>
 
 ## Table of Contents
@@ -55,6 +74,8 @@ To deploy please visit our channel at [@kastaid](https://t.me/kastaid).
 
 ## Credits
 
+* [RaphielGang](https://github.com/RaphielGang) - Telegram-Paperplane
+* [BianSepang](https://github.com/BianSepang) - WeebProject
 * [userbotindo](https://github.com/userbotindo) - Userbot Indonesia Community
 * [TeamUltroid](https://github.com/TeamUltroid) - Team Ultroid
 

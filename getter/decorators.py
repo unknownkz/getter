@@ -7,13 +7,13 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from asyncio import CancelledError, sleep
 from contextlib import suppress
 from datetime import datetime, timezone
 from io import BytesIO
 from platform import python_version
 from re import compile
-from sys import exc_info, exit
 from traceback import format_exc
 from telethon import events, version
 from telethon.errors import (
@@ -87,7 +87,7 @@ def kasta_cmd(pattern=None, **kwargs):
                 pass
             except AuthKeyDuplicatedError:
                 LOGS.error("STRING_SESSION expired, please create new! Quitting...")
-                exit(0)
+                sys.exit(0)
             except events.StopPropagation:
                 raise events.StopPropagation
             except Exception as e:
@@ -109,7 +109,7 @@ def kasta_cmd(pattern=None, **kwargs):
                     ftext += "`\n\n**Traceback Info:**`\n"
                     ftext += str(format_exc())
                     ftext += "`\n\n**Error Text:**`\n"
-                    ftext += str(exc_info()[1])
+                    ftext += str(sys.exc_info()[1])
                     ftext += "`\n\n--------END GETTER CRASH LOG--------"
                     ftext += "\n\n\n**Last 3 Commits:**`\n"
                     stdout, stderr = await runner('git log --pretty=format:"%an: %s" -3')

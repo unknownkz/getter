@@ -9,11 +9,11 @@
 
 import asyncio
 import signal
+import sys
 from base64 import b64decode
 from contextlib import suppress
 from importlib import import_module
-from random import randrange
-from sys import exit
+from secrets import choice
 from time import time
 from telethon.errors import ApiIdInvalidError, AuthKeyDuplicatedError, PhoneNumberInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -48,13 +48,13 @@ async def autous() -> None:
         if not Var.DEV_MODE:
             for _ in ["QGthc3RhaWQ=", "QGthc3Rhb3Q=", "QGthc3RhdXA="]:
                 _ = b64decode(_).decode("utf-8")
-                await asyncio.sleep(randrange(2, 4))
+                await asyncio.sleep(choice([2, 3, 4]))
                 await App(JoinChannelRequest(_))
 
 
 async def launching() -> None:
     try:
-        await asyncio.sleep(randrange(5, 8))
+        await asyncio.sleep(choice([5, 6, 7, 8]))
         await App.start()
         await asyncio.sleep(2)
         App.me = await App.get_me()
@@ -62,13 +62,13 @@ async def launching() -> None:
         await autous()
     except ApiIdInvalidError:
         LOGS.error("API_ID and API_HASH combination does not match, please re-check! Quitting...")
-        exit(1)
+        sys.exit(1)
     except (AuthKeyDuplicatedError, PhoneNumberInvalidError, EOFError):
         LOGS.error("STRING_SESSION expired, please create new! Quitting...")
-        exit(1)
+        sys.exit(1)
     except Exception as e:
         LOGS.exception("[LAUNCHING] - {}".format(e))
-        exit(1)
+        sys.exit(1)
 
 
 async def main() -> None:
@@ -80,7 +80,7 @@ async def main() -> None:
     [import_module("getter.plugins." + p) for p in plugins]
     loaded_plugins = time_formatter((time() - start) * 1000)
     LOGS.warning(">> Loaded Plugins {} (took {}) : {}".format(len(plugins), loaded_plugins, str(plugins)))
-    await asyncio.sleep(randrange(2, 4))
+    await asyncio.sleep(choice([2, 3, 4]))
     launch_time = time_formatter((time() - StartTime) * 1000)
     launch_msg = ">> 🚀 v{} Launch {} in {}".format(__version__, App.uid, launch_time)
     LOGS.info(launch_msg)
@@ -105,9 +105,9 @@ if __name__ == "__main__":
         pass
     except (ModuleNotFoundError, ImportError) as e:
         LOGS.exception("[MAIN_MODULE_IMPORT] : {}".format(e))
-        exit(1)
+        sys.exit(1)
     except Exception as e:
         LOGS.exception("[MAIN_ERROR] : {}".format(e))
     finally:
         LOGS.info("[MAIN] - App Stopped...")
-        exit(0)
+        sys.exit(0)

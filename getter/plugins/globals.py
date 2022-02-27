@@ -10,7 +10,7 @@
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
-from random import randrange
+from secrets import choice
 from time import time
 from telethon.errors import FloodWaitError
 from . import (
@@ -50,13 +50,13 @@ async def _(e):
             ):
                 try:
                     await e.client.send_message(chat, content)
-                    await sleep(randrange(2, 4))
+                    await sleep(choice([2, 3, 4]))
                     success += 1
                 except FloodWaitError as fw:
                     await sleep(fw.seconds + 10)
                     try:
                         await e.client.send_message(chat, content)
-                        await sleep(randrange(2, 4))
+                        await sleep(choice([2, 3, 4]))
                         success += 1
                     except Exception as err:
                         errors += f"• {err}\n"

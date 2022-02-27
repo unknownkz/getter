@@ -7,6 +7,7 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from contextlib import suppress
 from os import getpid, kill
 from pathlib import Path
@@ -17,12 +18,6 @@ from signal import (
     signal,
 )
 from subprocess import CalledProcessError, Popen, check_call
-from sys import (
-    argv,
-    executable,
-    exit,
-    stderr,
-)
 from time import sleep
 from typing import Generator
 
@@ -30,7 +25,7 @@ try:
     import psutil as psu
 except ModuleNotFoundError:
     print("Installing psutil...")
-    check_call([executable, "-m", "pip", "install", "--no-cache-dir", "-U", "psutil"])
+    check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", "-U", "psutil"])
 finally:
     import psutil as psu
 
@@ -67,10 +62,10 @@ def kill_process_tree(process) -> None:
 
 
 def main() -> None:
-    if len(argv) <= 1:
+    if len(sys.argv) <= 1:
         print("python3 -m scripts.autoreload [command]")
-        exit(0)
-    command = " ".join(argv[1:])
+        sys.exit(0)
+    command = " ".join(sys.argv[1:])
     process = Popen(command, shell=True)
     last_mtime = max(file_times())
     try:
@@ -85,9 +80,9 @@ def main() -> None:
             sleep(wait)
     except CalledProcessError as e:
         kill_process_tree(process)
-        exit(e.returncode)
+        sys.exit(e.returncode)
     except BaseException:
-        print("internal error!", file=stderr)
+        print("internal error!", file=sys.stderr)
         raise
     except KeyboardInterrupt:
         print(f"{BOLD}{RED}Kill process [{process.pid}]{RST}")
