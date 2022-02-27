@@ -2,6 +2,17 @@
 
 > Get and put users (scraping) to the target **group/channel** efficiently, correctly and safety.
 
+<p align="center">
+    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/workflow/status/kastaid/getter/CI?logo=github&label=CI" /></a>
+    <a href="https://app.codacy.com/gh/kastaid/getter/dashboard"><img alt="Codacy grade" src="https://img.shields.io/codacy/grade/2f86ed8f8534424c8d4cdaa197dc5ce2?logo=codacy" /></a>
+    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="LICENSE" src="https://img.shields.io/github/license/kastaid/getter" /></a>
+    <br>
+    <a href="https://github.com/kastaid/getter/issues"><img alt="Issues" src="https://img.shields.io/github/issues/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/kastaid/getter" /></a>
+    <a href="https://github.com/kastaid/getter/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/kastaid/getter" /></a>
+</p>
+
 ```
 #include <std/disclaimer.h>
 /**
@@ -17,17 +28,6 @@
     We will be rolling on the floor laughing at you.
 /**
 ```
-
-<p align="center">
-    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/workflow/status/kastaid/getter/CI?logo=github&label=CI" /></a>
-    <a href="https://app.codacy.com/gh/kastaid/getter/dashboard"><img alt="Codacy grade" src="https://img.shields.io/codacy/grade/2f86ed8f8534424c8d4cdaa197dc5ce2?logo=codacy" /></a>
-    <a href="https://github.com/kastaid/getter/actions/workflows/ci.yml"><img alt="LICENSE" src="https://img.shields.io/github/license/kastaid/getter" /></a>
-    <br>
-    <a href="https://github.com/kastaid/getter/issues"><img alt="Issues" src="https://img.shields.io/github/issues/kastaid/getter" /></a>
-    <a href="https://github.com/kastaid/getter/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/kastaid/getter" /></a>
-    <a href="https://github.com/kastaid/getter/network/members"><img alt="Forks" src="https://img.shields.io/github/forks/kastaid/getter" /></a>
-    <a href="https://github.com/kastaid/getter/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/kastaid/getter" /></a>
-</p>
 
 ## Table of Contents
 
