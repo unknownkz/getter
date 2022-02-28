@@ -160,8 +160,8 @@ async def _(e):
                 return await Kst.edit(
                     f"`Unfortunately, the directory {err} "
                     "does not seem to be a git repository.\n"
-                    "But we can fix that by force updating using "
-                    "{hl}update <now|pull|one>`"
+                    "Fix this one using "
+                    f"{hl}update <now|pull|one>`"
                 )
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
