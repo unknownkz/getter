@@ -136,7 +136,7 @@ async def _(e):
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        is_deploy = is_now = force_update = False
+        is_deploy = is_now = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
@@ -166,7 +166,6 @@ async def _(e):
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
             origin.fetch()
-            force_update = True
             repo.create_head("main", origin.refs.main)
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
@@ -184,15 +183,13 @@ async def _(e):
             await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-        if not (changelog and force_update):
+        if not changelog:
             await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
             return repo.__del__()
-        if not (mode and force_update):
+        if not mode:
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
-        if force_update:
-            await Kst.edit("`Force-Syncing to latest stable source code, please wait...`")
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
             await pulling(Kst)
