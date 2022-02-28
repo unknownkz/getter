@@ -4,12 +4,9 @@ ENV TERM xterm-256color
 ENV DEBIAN_FRONTEND noninteractive
 ENV PIP_NO_CACHE_DIR 1
 ENV TZ Asia/Jakarta
-ENV BASE /usr/src/app
-ENV ORIGIN kastaid
-ENV BRANCH main
-ENV APP getter
 
-WORKDIR $BASE
+WORKDIR /usr/src/app
+COPY . .
 
 RUN set -ex \
     && apt-get -qq update \
@@ -20,9 +17,8 @@ RUN set -ex \
         tzdata \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata \
-    && git clone -b $BRANCH https://github.com/$ORIGIN/$APP $BASE \
     && python3 -m pip install -U pip \
-    && pip3 install --no-cache-dir -U -r https://raw.githubusercontent.com/$ORIGIN/$APP/$BRANCH/requirements.txt \
+    && pip3 install --no-cache-dir -U -r requirements.txt \
     && apt-get -qq -y purge --auto-remove \
         apt-utils \
         build-essential \
