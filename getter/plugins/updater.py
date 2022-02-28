@@ -69,7 +69,6 @@ async def pulling(Kst):
     )
     await Kst.client.disconnect()
     execl(sys.executable, sys.executable, *sys.argv)
-    sys.exit()
 
 
 async def pushing(Kst, repo, ups_rem, ac_br):

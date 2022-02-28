@@ -110,7 +110,6 @@ async def _(e):
         if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
             await e.client.disconnect()
             execl(sys.executable, sys.executable, *sys.argv)
-            sys.exit()
         try:
             Heroku = from_key(Var.HEROKU_API)
             app = Heroku.apps()[Var.HEROKU_APP_NAME]
