@@ -35,7 +35,7 @@ async def eor(e, text=None, **args):
                 pass
             res = await e.edit(text, **args)
         except BaseException:
-            pass
+            return await _try_delete(e)
     else:
         _ = e if force_reply else None
         args["reply_to"] = e.reply_to_msg_id or _
