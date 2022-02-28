@@ -80,8 +80,9 @@ async def pulling(Kst):
             LOGS.error(rstderr)
         if rstdout:
             LOGS.info(rstdout)
-    await Kst.client.disconnect()
     execl(sys.executable, sys.executable, *sys.argv, environ)
+    sys.exit()
+    return
 
 
 async def pushing(Kst, repo, ups_rem, ac_br):

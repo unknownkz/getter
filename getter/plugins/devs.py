@@ -113,8 +113,9 @@ async def _(e):
         await sleep(1)
         await Kst.edit("`Restarting your app, please wait for a minute!`")
         if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-            await e.client.disconnect()
             execl(sys.executable, sys.executable, *sys.argv, environ)
+            sys.exit()
+            return
         try:
             Heroku = from_key(Var.HEROKU_API)
             app = Heroku.apps()[Var.HEROKU_APP_NAME]
