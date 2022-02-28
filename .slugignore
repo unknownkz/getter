@@ -10,6 +10,3 @@ setup.cfg
 .deepsource.toml
 *.env
 session.py
-.dockerignore
-Dockerfile
-heroku.yml

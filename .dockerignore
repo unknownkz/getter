@@ -11,6 +11,3 @@ setup.cfg
 .deepsource.toml
 *.env
 session.py
-.slugignore
-Procfile
-runtime.txt

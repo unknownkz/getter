@@ -7,23 +7,23 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from asyncio import get_event_loop
 from base64 import b64decode
 from pathlib import Path
 from platform import python_version
-from sys import exit, platform, version_info
 from time import time
 
 StartTime = time()
 __version__ = "0.3.0"
 
-if not platform.startswith("linux"):
-    print("MUST be use Linux platform, currently {}. Quitting...".format(platform))
-    exit(1)
+if not sys.platform.startswith("linux"):
+    print("MUST be use Linux platform, currently {}. Quitting...".format(sys.platform))
+    sys.exit(1)
 
-if version_info.major < 3 or version_info.minor < 9:
+if sys.version_info.major < 3 or sys.version_info.minor < 9:
     print("MUST be use Python version of least 3.9.x currently {}. Quitting...".format(python_version()))
-    exit(1)
+    sys.exit(1)
 
 Root: Path = Path(__file__).parent.parent
 
