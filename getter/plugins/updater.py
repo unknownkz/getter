@@ -20,6 +20,7 @@ from . import (
     HELP,
     DEVS,
     Var,
+    LOGS,
     eor,
     eod,
     hl,
@@ -63,13 +64,22 @@ async def print_changelogs(Kst, changelog):
 
 
 async def pulling(Kst):
-    await Runner("git pull -f && pip3 install -U -r requirements.txt")
+    gstdout, gstderr = await Runner(f'git pull -f && pip3 install -U -r {Root / "requirements.txt"}')
+    if gstderr:
+        LOGS.error(gstderr)
+    if gstdout:
+        LOGS.info(gstdout)
     await Kst.edit(
         f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
-    await Runner(
-        "rm -rf -- .github docs README.md LICENSE scripts run.py requirements-dev.txt setup.cfg .editorconfig .deepsource.toml session.py"
-    )
+    if not Var.DEV_MODE:
+        rstdout, rstderr = await Runner(
+            f'rm -rf -- {Root / ".github"} {Root / "docs"} {Root / "README.md"} {Root / "LICENSE"} {Root / "scripts"} {Root / "run.py"} {Root / "requirements-dev.txt"} {Root / "setup.cfg"} {Root / ".editorconfig"} {Root / ".deepsource.toml"} {Root / "session.py"}'
+        )
+        if rstderr:
+            LOGS.error(rstderr)
+        if rstdout:
+            LOGS.info(rstdout)
     await Kst.client.disconnect()
     execl(sys.executable, sys.executable, *sys.argv, environ)
 
