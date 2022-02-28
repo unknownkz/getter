@@ -7,12 +7,12 @@
 # < https://www.github.com/kastaid/getter/blob/main/LICENSE/ >
 # ================================================================
 
+import sys
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
 from os import execl, name, system
 from secrets import choice
-from sys import executable
 from time import time
 from heroku3 import from_key
 from telethon import functions
@@ -108,7 +108,9 @@ async def _(e):
         await sleep(1)
         await Kst.edit("`Restarting your app, please wait for a minute!`")
         if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-            return execl(executable, executable, "-m", "getter")
+            await e.client.disconnect()
+            execl(sys.executable, sys.executable, *sys.argv)
+            sys.exit()
         try:
             Heroku = from_key(Var.HEROKU_API)
             app = Heroku.apps()[Var.HEROKU_APP_NAME]
