@@ -53,12 +53,12 @@ async def _(e):
             await m.try_delete()
             count += 1
             await sleep(0.5)
-        await e.eor(f"`Purged {count}`", time=2)
+        await e.eor(f"`Purged {count}`", time=2, silent=True)
         return
     with suppress(BaseException):
         msgs = [x for x in range(e.reply_to_msg_id, e.id + 1)]  # noqa: C416
         await e.client.delete_messages(e.chat_id, msgs)
-    Kst = await e.client.send_message(e.chat_id, "`purged`")
+    Kst = await e.client.send_message(e.chat_id, "`purged`", silent=True)
     await sleep(2)
     await Kst.try_delete()
 
@@ -76,7 +76,7 @@ async def _(e):
         async for m in e.client.iter_messages(e.chat_id, limit=num, from_user="me"):
             await m.try_delete()
             count += 1
-        await e.eor(f"`Purged {count}`", time=2)
+        await e.eor(f"`Purged {count}`", time=2, silent=True)
         return
     if not (match or e.is_reply):
         await e.eor(f"Reply to a message to purge from or use it like `{hl}purgeme <num>`", time=10)
@@ -96,7 +96,7 @@ async def _(e):
             msgs = []
     if msgs:
         await e.client.delete_messages(chat, msgs)
-    await e.eor(f"`Purged {count}`", time=2)
+    await e.eor(f"`Purged {count}`", time=2, silent=True)
 
 
 @kasta_cmd(disable_errors=True, pattern="ids?")
@@ -111,7 +111,7 @@ async def _(e):
         return
     text = "**User ID:** " if e.is_private else "**Chat ID:** "
     text = f"{text}`{chat_id}`" + f"\n**Message ID:** `{e.id}`"
-    await e.eor(text)
+    await e.eor(text, silent=True)
 
 
 @kasta_cmd(disable_errors=True, pattern="total(?: |$)(.*)")
@@ -170,9 +170,10 @@ async def _(e):
                 r = await conv.get_response()
                 resp = await conv.get_response()
             except YouBlockedUserError:
-                await Kst.eor("`Try again now...!`", time=15)
                 await e.client(UnblockRequest(sangmata))
-                return
+                rets = await conv.send_message(f"/search_id {user.id}")
+                r = await conv.get_response()
+                resp = await conv.get_response()
             if r.text.startswith("Name"):
                 respd = await conv.get_response()
                 if len(r.message) > 4096:

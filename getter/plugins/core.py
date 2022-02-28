@@ -38,17 +38,18 @@ from . import (
     StartTime,
     __version__,
     Root,
-    DEVS,
     HELP,
-    display_name,
+    WORKER,
+    DEVS,
     eor,
     eod,
     events,
-    get_username,
     TZ,
     hl,
-    is_telegram_link,
     kasta_cmd,
+    display_name,
+    get_username,
+    is_telegram_link,
     time_formatter,
 )
 
@@ -101,6 +102,16 @@ getmembers_text = """
 <b>Total:</b> <code>{}</code>
 <b>Done ({}):</b> <code>{}</code>
 <b>Datetime:</b> <code>{}</code>
+"""
+
+no_process_text = "`There is no running proccess.`"
+cancel_text = "`Requested to cancel the current process...`"
+cancelled_text = """
+❎ **The process has been cancelled.**
+
+**Mode:** **{}**
+**Current:** `{}`
+**{}:** `{}` users.
 """
 
 
@@ -175,7 +186,7 @@ async def _(e):
     is_devs = True if not (hasattr(e, "out") and e.out) else False
     if is_devs and e.client.uid in DEVS:
         return
-    if INVITING_LOCK.locked():
+    if WORKER.get(e.chat_id) or INVITING_LOCK.locked():
         await eod(e, "`Please wait until previous INVITE finished !!`", time=5, silent=True)
         return
     async with INVITING_LOCK:
@@ -189,9 +200,17 @@ async def _(e):
         success = failed = 0
         error = "None"
         chat = await e.get_chat()
+        WORKER[e.chat_id] = {
+            "mode": "invite",
+            "current": chat.title,
+            "success": success,
+        }
         try:
             await Kst.edit("`Checking Permissions...`")
             async for x in e.client.iter_participants(group.full_chat.id):
+                if not WORKER.get(e.chat_id):
+                    INVITING_LOCK.release()
+                    return
                 if not (x.deleted or x.bot or x.is_self or isinstance(x.participant, Admins)) and not isinstance(
                     x.status, (LastMonth, StatusEmpty)
                 ):
@@ -212,6 +231,7 @@ async def _(e):
                             return
                         await e.client(InviteUser(channel=chat, users=[x.id]))
                         success += 1
+                        WORKER[e.chat_id].update({"success": success})
                         await Kst.edit(
                             invite_text.format(
                                 success,
@@ -232,6 +252,10 @@ async def _(e):
                         failed += 1
         except BaseException:  # TypeError
             pass
+        with suppress(BaseException):
+            if WORKER.get(e.chat_id):
+                WORKER.pop(e.chat_id)
+                INVITING_LOCK.release()
         taken = time_formatter((time() - start_time) * 1000)
         await Kst.edit(
             done_text.format(
@@ -387,7 +411,7 @@ async def _(e):
 
 @kasta_cmd(func=lambda x: not x.is_private, pattern="add(member|admin|bot)s?$")
 async def _(e):
-    if ADDING_LOCK.locked():
+    if WORKER.get(e.chat_id) or ADDING_LOCK.locked():
         await eod(e, "`Please wait until previous ADDING finished !!`", time=5, silent=True)
         return
     async with ADDING_LOCK:
@@ -418,7 +442,15 @@ async def _(e):
             )
             return
         success = 0
+        WORKER[e.chat_id] = {
+            "mode": "add",
+            "current": chat.title,
+            "success": success,
+        }
         for user in users:
+            if not WORKER.get(e.chat_id):
+                ADDING_LOCK.release()
+                return
             if success == 30:
                 await Kst.edit(f"`🔄 Reached 30 members, wait until {900/60} minutes...`")
                 await sleep(900)
@@ -426,12 +458,45 @@ async def _(e):
                 adding = InputPeerUser(user["user_id"], user["hash"])
                 await e.client(InviteUser(channel=chat, users=[adding]))
                 success += 1
+                WORKER[e.chat_id].update({"success": success})
                 await Kst.edit(f"`Adding {success} {mode}...`")
                 await sleep(choice((4, 5, 6)))
             except BaseException:
                 pass
+        with suppress(BaseException):
+            if WORKER.get(e.chat_id):
+                WORKER.pop(e.chat_id)
+                ADDING_LOCK.release()
         taken = time_formatter((time() - start_time) * 1000)
         await Kst.edit(f"`✅ Completed adding {success} {mode} in {taken}`")
+
+
+@kasta_cmd(
+    func=lambda x: not x.is_private,
+    pattern="cancel$",
+)
+@kasta_cmd(
+    func=lambda x: not x.is_private,
+    own=True,
+    senders=DEVS,
+    pattern="gcancel$",
+)
+async def _(e):
+    if not WORKER.get(e.chat_id):
+        return await e.eod(no_process_text, silent=True)
+    Kst = await e.eor(cancel_text, silent=True)
+    _worker = WORKER.get(e.chat_id)
+    with suppress(BaseException):
+        if WORKER.get(e.chat_id):
+            WORKER.pop(e.chat_id)
+    await Kst.edit(
+        cancelled_text.format(
+            _worker["mode"],
+            _worker["current"],
+            _worker["success"],
+            "Inviting" if _worker["mode"] == "invite" else "Adding",
+        )
+    )
 
 
 @kasta_cmd(pattern="test$")
@@ -467,6 +532,9 @@ Run this command in everywhere exclude the target groups.
 
 ❯ `{i}addmembers|{i}addadmins|{i}addbots`
 Adding members to your current group/channel from saved csv files generate by command above as members or admins or bots (there's a limit).
+
+❯ `{i}cancel`
+Cancel the running process, both for invite and add.
 
 ❯ `{i}limit`
 Check your account was limit or not.

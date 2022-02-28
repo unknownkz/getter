@@ -88,5 +88,6 @@ async def _try_delete(e):
 
 
 setattr(Message, "eor", eor)  # noqa: B010
+setattr(Message, "eod", eod)  # noqa: B010
 setattr(Message, "eos", eos)  # noqa: B010
 setattr(Message, "try_delete", _try_delete)  # noqa: B010

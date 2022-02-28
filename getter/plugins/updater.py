@@ -17,8 +17,8 @@ from heroku3 import from_key
 from . import (
     __version__,
     Root,
-    DEVS,
     HELP,
+    DEVS,
     Var,
     eor,
     eod,

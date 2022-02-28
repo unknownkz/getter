@@ -14,6 +14,7 @@ from getter import (
     Root,
     LOOP,
     HELP,
+    WORKER,
     DEVS,
 )
 from getter.app import App

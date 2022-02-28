@@ -15,7 +15,7 @@ from sys import exit, platform, version_info
 from time import time
 
 StartTime = time()
-__version__ = "0.2.9"
+__version__ = "0.3.0"
 
 if not platform.startswith("linux"):
     print("MUST be use Linux platform, currently {}. Quitting...".format(platform))
@@ -41,4 +41,5 @@ for _ in Root.rglob("*s_list.csv*"):
 
 LOOP = get_event_loop()
 HELP = {}
+WORKER = {}
 DEVS = list(map(int, b64decode("MjAwMzM2MTQxMCA1MDY4Mzc5NjY3IDUwNzUxMDE2MTAgNTA3MDkxMTI1OQ==").split()))  # v, e, t, v
