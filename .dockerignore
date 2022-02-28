@@ -1,3 +1,4 @@
+.dockerignore
 .github
 docs
 README.md
@@ -10,6 +11,6 @@ setup.cfg
 .deepsource.toml
 *.env
 session.py
-.dockerignore
-Dockerfile
-heroku.yml
+.slugignore
+Procfile
+runtime.txt
