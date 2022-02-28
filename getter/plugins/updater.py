@@ -9,7 +9,7 @@
 
 import sys
 from asyncio import Lock, sleep
-from os import execl, environ
+from os import execl
 from secrets import choice
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
@@ -20,7 +20,6 @@ from . import (
     HELP,
     DEVS,
     Var,
-    LOGS,
     eor,
     eod,
     hl,
@@ -67,16 +66,11 @@ async def pulling(Kst, repo, ups_rem, ac_br):
         ups_rem.pull(ac_br)
     except GitCommandError:
         repo.git.reset("--hard", "FETCH_HEAD")
-    gstdout, gstderr = await Runner(f'pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
-    if gstderr:
-        LOGS.error(gstderr)
-    if gstdout:
-        LOGS.info(gstdout)
+    await Runner(f'pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
     _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     await eod(Kst, _)
-    execl(sys.executable, sys.executable, *sys.argv, environ)
+    execl(sys.executable, sys.executable, *sys.argv)
     sys.exit()
-    return
 
 
 async def pushing(Kst, repo, ups_rem, ac_br):
@@ -114,7 +108,6 @@ async def pushing(Kst, repo, ups_rem, ac_br):
         return
     _ = f"`[PUSH] Update Successfully, Rebooting...`\nTry check alive by using the `{hl}ping` command after a few minutes."
     await eod(Kst, _)
-    return
 
 
 @kasta_cmd(pattern="update(?: |$)(now|deploy|pull|push|one|all)?(?: |$)(.*)")
@@ -187,6 +180,7 @@ async def _(e):
             return
         if force_now:
             await Kst.edit("`Force-Syncing to latest stable source code, please wait...`")
+            await sleep(2)
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
             await pulling(Kst, repo, ups_rem, ac_br)

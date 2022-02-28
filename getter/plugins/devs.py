@@ -11,12 +11,7 @@ import sys
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
-from os import (
-    execl,
-    environ,
-    name,
-    system,
-)
+from os import execl, name, system
 from secrets import choice
 from time import time
 from heroku3 import from_key
@@ -113,7 +108,7 @@ async def _(e):
         await sleep(1)
         await Kst.edit("`Restarting your app, please wait for a minute!`")
         if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-            execl(sys.executable, sys.executable, *sys.argv, environ)
+            execl(sys.executable, sys.executable, *sys.argv)
             sys.exit()
             return
         try:
