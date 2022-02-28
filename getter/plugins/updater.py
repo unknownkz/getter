@@ -10,7 +10,7 @@
 from asyncio import Lock, sleep
 from os import execl
 from secrets import choice
-from sys import executable, argv
+from sys import executable
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 from heroku3 import from_key
@@ -67,7 +67,7 @@ async def pulling(Kst):
     await Kst.edit(
         f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
-    execl(executable, executable, *argv)
+    execl(executable, executable, "-m", "getter")
     return
 
 
