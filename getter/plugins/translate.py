@@ -48,8 +48,8 @@ async def _(e):
             after_tr_text,
         )
         await Kst.edit(output_str)
-    except Exception as e:
-        await Kst.edit(str(e), parse_mode=parse_pre)
+    except Exception as err:
+        await Kst.edit(str(err), parse_mode=parse_pre)
 
 
 @kasta_cmd(disable_errors=True, pattern="tts")
