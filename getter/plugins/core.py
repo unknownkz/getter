@@ -109,9 +109,9 @@ cancel_text = "`Requested to cancel the current process...`"
 cancelled_text = """
 ❎ **The process has been cancelled.**
 
-**Mode:** **{}**
+**Mode:** `{}`
 **Current:** `{}`
-**{}:** `{}` users.
+**{}:** `{}`
 """
 
 
@@ -209,7 +209,10 @@ async def _(e):
             await Kst.edit("`Checking Permissions...`")
             async for x in e.client.iter_participants(group.full_chat.id):
                 if not WORKER.get(e.chat_id):
-                    INVITING_LOCK.release()
+                    await Kst.try_delete()
+                    if INVITING_LOCK.locked():
+                        INVITING_LOCK.acquire()
+                        INVITING_LOCK.release()
                     return
                 if not (x.deleted or x.bot or x.is_self or isinstance(x.participant, Admins)) and not isinstance(
                     x.status, (LastMonth, StatusEmpty)
@@ -255,7 +258,9 @@ async def _(e):
         with suppress(BaseException):
             if WORKER.get(e.chat_id):
                 WORKER.pop(e.chat_id)
-                INVITING_LOCK.release()
+                if INVITING_LOCK.locked():
+                    INVITING_LOCK.acquire()
+                    INVITING_LOCK.release()
         taken = time_formatter((time() - start_time) * 1000)
         await Kst.edit(
             done_text.format(
@@ -449,7 +454,10 @@ async def _(e):
         }
         for user in users:
             if not WORKER.get(e.chat_id):
-                ADDING_LOCK.release()
+                await Kst.try_delete()
+                if ADDING_LOCK.locked():
+                    ADDING_LOCK.acquire()
+                    ADDING_LOCK.release()
                 return
             if success == 30:
                 await Kst.edit(f"`🔄 Reached 30 members, wait until {900/60} minutes...`")
@@ -466,7 +474,9 @@ async def _(e):
         with suppress(BaseException):
             if WORKER.get(e.chat_id):
                 WORKER.pop(e.chat_id)
-                ADDING_LOCK.release()
+                if ADDING_LOCK.locked():
+                    ADDING_LOCK.acquire()
+                    ADDING_LOCK.release()
         taken = time_formatter((time() - start_time) * 1000)
         await Kst.edit(f"`✅ Completed adding {success} {mode} in {taken}`")
 
@@ -493,8 +503,8 @@ async def _(e):
         cancelled_text.format(
             _worker["mode"],
             _worker["current"],
-            _worker["success"],
             "Inviting" if _worker["mode"] == "invite" else "Adding",
+            _worker["success"],
         )
     )
 

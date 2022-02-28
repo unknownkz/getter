@@ -29,7 +29,7 @@ from . import (
 )
 
 UPDATE_LOCK = Lock()
-off_repo = "https://github.com/kastaid/getter.git"
+off_repo = "https://github.com/kastaid/getter"
 help_text = f"""❯ `{hl}update <now|pull|one>`
 Temporary update as locally if available from repo.
 
@@ -39,13 +39,12 @@ Permanently update as heroku, will forced deploy.
 
 
 def gen_chlog(repo, diff):
-    _ = repo.remotes[0].config_reader.get("url").replace(".git", "")
     ac_br = repo.active_branch.name
     ch_log = ""
-    ch = f"<b>Getter v{__version__} updates for <a href={_}/tree/{ac_br}>[{ac_br}]</a>:</b>"
+    ch = f"<b>Getter v{__version__} updates for <a href={off_repo}/tree/{ac_br}>[{ac_br}]</a>:</b>"
     d_form = "%d/%m/%Y %H:%M:%S"
     for c in repo.iter_commits(diff):
-        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={_.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
+        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={off_repo.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
     if ch_log:
         return str(ch + ch_log)
     return ch_log
@@ -63,23 +62,18 @@ async def print_changelogs(Kst, changelog):
         await Kst.edit(changelog, parse_mode="html")
 
 
-async def pulling(Kst):
-    gstdout, gstderr = await Runner(f'git pull -f && pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
+async def pulling(Kst, repo, ups_rem, ac_br):
+    try:
+        ups_rem.pull(ac_br)
+    except GitCommandError:
+        repo.git.reset("--hard", "FETCH_HEAD")
+    gstdout, gstderr = await Runner(f'pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
     if gstderr:
         LOGS.error(gstderr)
     if gstdout:
         LOGS.info(gstdout)
-    await Kst.edit(
-        f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
-    )
-    if not Var.DEV_MODE:
-        rstdout, rstderr = await Runner(
-            f'rm -rf -- {Root / ".github"} {Root / "docs"} {Root / "README.md"} {Root / "LICENSE"} {Root / "scripts"} {Root / "run.py"} {Root / "requirements-dev.txt"} {Root / "setup.cfg"} {Root / ".editorconfig"} {Root / ".deepsource.toml"} {Root / "session.py"}'
-        )
-        if rstderr:
-            LOGS.error(rstderr)
-        if rstdout:
-            LOGS.info(rstdout)
+    _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
+    await eod(Kst, _)
     execl(sys.executable, sys.executable, *sys.argv, environ)
     sys.exit()
     return
@@ -118,9 +112,8 @@ async def pushing(Kst, repo, ups_rem, ac_br):
     if build.status == "failed":
         await eod(Kst, "`Build Deploy failed, detected some errors...`")
         return
-    await Kst.edit(
-        f"`[PUSH] Update Successfully, Rebooting...`\nTry check alive by using the `{hl}ping` command after a few minutes."
-    )
+    _ = f"`[PUSH] Update Successfully, Rebooting...`\nTry check alive by using the `{hl}ping` command after a few minutes."
+    await eod(Kst, _)
     return
 
 
@@ -136,7 +129,7 @@ async def _(e):
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        is_deploy = is_now = False
+        is_deploy = is_now = force_update = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
@@ -162,10 +155,18 @@ async def _(e):
         except GitCommandError as err:
             await Kst.edit(f"`Early failure! {err}`")
             return Repo().__del__()
-        except InvalidGitRepositoryError:
+        except InvalidGitRepositoryError as err:
+            if not mode:
+                return await Kst.edit(
+                    f"`Unfortunately, the directory {err} "
+                    "does not seem to be a git repository.\n"
+                    "But we can fix that by force updating using "
+                    "{hl}update <now|pull|one>`"
+                )
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
             origin.fetch()
+            force_update = True
             repo.create_head("main", origin.refs.main)
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
@@ -183,16 +184,18 @@ async def _(e):
             await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-        if not changelog:
+        if not (changelog and force_update):
             await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
             return repo.__del__()
-        if not mode:
+        if not (mode and force_update):
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
+        if force_update:
+            await Kst.edit("`Force-Syncing to latest stable source code, please wait...`")
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
-            await pulling(Kst)
+            await pulling(Kst, repo, ups_rem, ac_br)
         return
 
 
