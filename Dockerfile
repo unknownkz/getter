@@ -33,4 +33,4 @@ RUN set -ex \
 
 EXPOSE 80 443
 
-CMD python3 -m $APP
+CMD ["python3", "-m", "getter"]
