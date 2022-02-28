@@ -64,7 +64,7 @@ async def print_changelogs(Kst, changelog):
 
 
 async def pulling(Kst):
-    gstdout, gstderr = await Runner(f'git pull -f && pip3 install -U -r {Root / "requirements.txt"}')
+    gstdout, gstderr = await Runner(f'git pull -f && pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
     if gstderr:
         LOGS.error(gstderr)
     if gstdout:

@@ -2,7 +2,6 @@ Dockerfile
 .dockerignore
 app.json
 Procfile
-runtime.txt
 .slugignore
 heroku.yml
 .github

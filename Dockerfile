@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PIP_NO_CACHE_DIR 1
 ENV TZ Asia/Jakarta
 
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY . .
 
 RUN set -ex \
