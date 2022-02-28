@@ -165,7 +165,7 @@ async def _(e):
         if is_deploy:
             if is_devs:
                 await sleep(choice((4, 5, 6)))
-            await Kst.edit("`PUSHING... Please wait.`")
+            await Kst.edit("`[PUSHING] Please wait...`")
             await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
@@ -177,7 +177,7 @@ async def _(e):
             await Kst.reply(help_text, silent=True)
             return
         if is_now:
-            await Kst.edit("`PULLING... Plase wait.`")
+            await Kst.edit("`[PULLING] Plase wait...`")
             await pulling(Kst)
         return
 
