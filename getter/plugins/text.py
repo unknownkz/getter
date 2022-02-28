@@ -183,8 +183,8 @@ async def _b64decode(e):
         return await e.try_delete()
     try:
         text = b64decode(Kst).decode("utf-8", "replace")
-    except AsciiError as e:
-        text = f"Invalid Base64 data: {e}"
+    except AsciiError as err:
+        text = f"Invalid Base64 data: {err}"
     await e.eor(text, parse_mode=parse_pre)
 
 

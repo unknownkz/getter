@@ -80,8 +80,8 @@ async def _(e):
         )
         (voice).unlink(missing_ok=True)
         await e.try_delete()
-    except Exception as e:
-        await Kst.edit(str(e), parse_mode=parse_pre)
+    except Exception as err:
+        await Kst.edit(str(err), parse_mode=parse_pre)
 
 
 HELP.update(

@@ -106,7 +106,7 @@ async def _(e):
         except IndexError:
             return await Kst.edit(simple_usage())
         if opt in ["heroku", "hk", "h"]:
-            is_hk, hk = await heroku_usage()
+            _, hk = await heroku_usage()
             await Kst.edit(hk)
         else:
             await Kst.edit(simple_usage())
