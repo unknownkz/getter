@@ -11,9 +11,16 @@ import sys
 from asyncio import sleep
 from contextlib import suppress
 from io import BytesIO
-from os import execl, name, system
+from os import (
+    close,
+    execl,
+    name,
+    system,
+    getpid,
+)
 from secrets import choice
 from time import time
+import psutil as psu
 from heroku3 import from_key
 from telethon import functions
 from . import (
@@ -101,22 +108,24 @@ async def _(e):
 
 @kasta_cmd(pattern="restart$")
 async def _(e):
-    with suppress(BaseException):
-        Kst = await e.eor("`Restarting...`")
-        if name == "posix":
-            _ = system("clear")
-        await sleep(1)
-        await Kst.edit("`Restarting your app, please wait for a minute!`")
-        if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
-            execl(sys.executable, sys.executable, *sys.argv)
-            sys.exit()
-            return
-        try:
-            Heroku = from_key(Var.HEROKU_API)
-            app = Heroku.apps()[Var.HEROKU_APP_NAME]
-            app.restart()
-        except BaseException:
-            await Kst.edit("`HEROKU_API` or `HEROKU_APP_NAME` is wrong! Kindly re-check in Config Vars.")
+    Kst = await e.eor("`Restarting...`")
+    if name == "posix":
+        _ = system("clear")
+    await sleep(1)
+    await Kst.edit("`Restarting your app, please wait for a minute!`")
+    if not (Var.HEROKU_API and Var.HEROKU_APP_NAME):
+        with suppress(psu.NoSuchProcess, psu.AccessDenied, psu.ZombieProcess):
+            c_p = psu.Process(getpid())
+            [close(h.fd) for h in c_p.open_files() + c_p.connections()]
+        execl(sys.executable, sys.executable, "-m", "getter")
+        sys.exit()
+        return
+    try:
+        Heroku = from_key(Var.HEROKU_API)
+        app = Heroku.apps()[Var.HEROKU_APP_NAME]
+        app.restart()
+    except BaseException:
+        await Kst.edit("`HEROKU_API` or `HEROKU_APP_NAME` is wrong! Kindly re-check in Config Vars.")
 
 
 @kasta_cmd(disable_errors=True, pattern="json$")

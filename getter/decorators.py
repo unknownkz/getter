@@ -29,10 +29,10 @@ from telethon.errors import (
     MessageNotModifiedError,
 )
 from getter import __version__
-from .app import App
-from .config import HANDLER
-from .logger import LOGS
-from .utils import (
+from getter.app import App
+from getter.config import HANDLER
+from getter.logger import LOGS
+from getter.utils import (
     display_name,
     md_to_text,
     time_formatter,

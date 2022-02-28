@@ -11,30 +11,36 @@ import sys
 from telethon import TelegramClient
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 from telethon.sessions import StringSession
-from .config import Var
-from .logger import LOGS
 
-session = ""
-if Var.STRING_SESSION:
-    if len(Var.STRING_SESSION) != 353:
-        LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")
+
+def Client() -> TelegramClient:
+    from getter.config import Var
+    from getter.logger import LOGS
+
+    session = ""
+    if Var.STRING_SESSION:
+        if len(Var.STRING_SESSION) != 353:
+            LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")
+            sys.exit(1)
+        session = StringSession(str(Var.STRING_SESSION))
+    else:
+        LOGS.error("STRING_SESSION empty. Please filling! Quitting...")
         sys.exit(1)
-    session = StringSession(str(Var.STRING_SESSION))
-else:
-    LOGS.error("STRING_SESSION empty. Please filling! Quitting...")
-    sys.exit(1)
+    try:
+        client = TelegramClient(
+            session=session,
+            api_id=Var.API_ID,
+            api_hash=Var.API_HASH,
+            loop=None,
+            connection=ConnectionTcpAbridged,
+            auto_reconnect=True,
+            connection_retries=None,
+        )
+        client.parse_mode = "markdown"
+    except Exception as e:
+        LOGS.exception("[APP] - {}".format(e))
+        sys.exit(1)
+    return client
 
-try:
-    App = TelegramClient(
-        session=session,
-        api_id=Var.API_ID,
-        api_hash=Var.API_HASH,
-        loop=None,
-        connection=ConnectionTcpAbridged,
-        auto_reconnect=True,
-        connection_retries=None,
-    )
-    App.parse_mode = "markdown"
-except Exception as e:
-    LOGS.exception("[APP] - {}".format(e))
-    sys.exit(1)
+
+App = Client()

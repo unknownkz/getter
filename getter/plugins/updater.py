@@ -9,8 +9,10 @@
 
 import sys
 from asyncio import Lock, sleep
-from os import execl
+from contextlib import suppress
+from os import close, execl, getpid
 from secrets import choice
+import psutil as psu
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 from heroku3 import from_key
@@ -66,10 +68,13 @@ async def pulling(Kst, repo, ups_rem, ac_br):
         ups_rem.pull(ac_br)
     except GitCommandError:
         repo.git.reset("--hard", "FETCH_HEAD")
-    await Runner(f'pip3 install --no-cache-dir -U -r {Root / "requirements.txt"}')
+    await Runner("pip3 install --no-cache-dir -U -r requirements.txt")
     _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     await eod(Kst, _)
-    execl(sys.executable, sys.executable, *sys.argv)
+    with suppress(psu.NoSuchProcess, psu.AccessDenied, psu.ZombieProcess):
+        c_p = psu.Process(getpid())
+        [close(h.fd) for h in c_p.open_files() + c_p.connections()]
+    execl(sys.executable, sys.executable, "-m", "getter")
     sys.exit()
 
 
@@ -127,7 +132,7 @@ async def _(e):
             is_deploy = True
         if mode in ["now", "pull", "one"]:
             is_now = True
-        if is_now and opt in ["force", "f"]:
+        if not Var.DEV_MODE and is_now and opt in ["force", "f"]:
             force_now = True
         if is_devs and opt and not force_now:
             user_id = version = None

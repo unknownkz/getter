@@ -18,11 +18,11 @@ from time import time
 from telethon.errors import ApiIdInvalidError, AuthKeyDuplicatedError, PhoneNumberInvalidError
 from telethon.tl.functions.channels import JoinChannelRequest
 from getter import StartTime, __version__, LOOP
-from .app import App
-from .config import Var
-from .logger import LOGS
-from .plugins import ALL_PLUGINS
-from .utils import time_formatter
+from getter.app import App
+from getter.config import Var
+from getter.logger import LOGS
+from getter.plugins import ALL_PLUGINS
+from getter.utils import time_formatter
 
 success_msg = ">> Visit @kastaid for updates !!"
 

@@ -17,7 +17,6 @@ from emoji import get_emoji_regexp
 from markdown import markdown
 from telethon.tl.types import MessageEntityMentionName, MessageEntityPre
 from telethon.utils import add_surrogate, get_display_name
-from .logger import LOGS
 
 tlink_re = r"^(?:https?://)((www)\.|)(?:t\.me|telegram\.(?:dog|me))/(\w+)$"
 tusername_re = r"^(?:https?://)((www)\.|)(?:t\.me|telegram\.(?:dog|me))/"
@@ -133,6 +132,8 @@ async def Searcher(
 
 
 async def get_user(event, group=1):
+    from getter.logger import LOGS
+
     args = event.pattern_match.group(group).split(" ", 1)
     extra = None
     await event.get_chat()

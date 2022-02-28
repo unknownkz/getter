@@ -10,7 +10,7 @@
 from os import getenv
 from dotenv import find_dotenv, load_dotenv
 from pytz import timezone
-from .logger import LOGS
+from getter.logger import LOGS
 
 load_dotenv(find_dotenv("config.env"))
 
