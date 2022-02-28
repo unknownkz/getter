@@ -30,7 +30,7 @@ from . import (
 
 UPDATE_LOCK = Lock()
 off_repo = "https://github.com/kastaid/getter"
-help_text = f"""❯ `{hl}update <now|pull|one>`
+help_text = f"""❯ `{hl}update <now|pull|one> <force|f>`
 Temporary update as locally if available from repo.
 
 ❯ `{hl}update <deploy|push|all>`
@@ -129,12 +129,14 @@ async def _(e):
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        is_deploy = is_now = force_update = False
+        is_deploy = is_now = force_now = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
             is_now = True
-        if is_devs and opt:
+        if is_now and opt in ["force", "f"]:
+            force_now = True
+        if is_devs and opt and not force_now:
             user_id = version = None
             try:
                 user_id = int(opt)
@@ -155,18 +157,10 @@ async def _(e):
         except GitCommandError as err:
             await Kst.edit(f"`Early failure! {err}`")
             return Repo().__del__()
-        except InvalidGitRepositoryError as err:
-            if not mode:
-                return await Kst.edit(
-                    f"`Unfortunately, the directory {err} "
-                    "does not seem to be a git repository.\n"
-                    "Fix this one using "
-                    f"{hl}update <now|pull|one>`"
-                )
+        except InvalidGitRepositoryError:
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
             origin.fetch()
-            force_update = True
             repo.create_head("main", origin.refs.main)
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
@@ -184,14 +178,14 @@ async def _(e):
             await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-        if not (changelog and force_update):
+        if not changelog and not force_now:
             await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
             return repo.__del__()
-        if not (mode and force_update):
+        if not mode and not force_now:
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
-        if force_update:
+        if force_now:
             await Kst.edit("`Force-Syncing to latest stable source code, please wait...`")
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
@@ -216,7 +210,7 @@ HELP.update(
             """❯ `{i}update`
 Checks for updates, also displaying the changelog.
 
-❯ `{i}update <now|pull|one>`
+❯ `{i}update <now|pull|one> <force|f>`
 Temporary update as locally if available from repo.
 
 ❯ `{i}update <deploy|push|all>`
