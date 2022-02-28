@@ -1,5 +1,6 @@
 FROM python:3.10-slim-bullseye
 
+ENV TERM xterm-256color
 ENV DEBIAN_FRONTEND noninteractive
 ENV PIP_NO_CACHE_DIR 1
 ENV TZ Asia/Jakarta

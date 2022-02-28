@@ -1,4 +1,4 @@
-.dockerignore
+Dockerfile
 .github
 docs
 README.md
