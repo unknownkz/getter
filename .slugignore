@@ -2,7 +2,7 @@
 docs
 README.md
 LICENSE
-scripts/
+scripts
 run.py
 requirements-dev.txt
 setup.cfg

@@ -9,7 +9,7 @@
 
 import sys
 from asyncio import Lock, sleep
-from os import execl
+from os import execl, environ
 from secrets import choice
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
@@ -63,12 +63,15 @@ async def print_changelogs(Kst, changelog):
 
 
 async def pulling(Kst):
-    await Runner("git pull -f && pip3 install -r requirements.txt")
+    await Runner("git pull -f && pip3 install -U -r requirements.txt")
     await Kst.edit(
         f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
+    await Runner(
+        "rm -rf -- .github docs README.md LICENSE scripts run.py requirements-dev.txt setup.cfg .editorconfig .deepsource.toml *.env session.py"
+    )
     await Kst.client.disconnect()
-    execl(sys.executable, sys.executable, *sys.argv)
+    execl(sys.executable, sys.executable, *sys.argv, environ)
 
 
 async def pushing(Kst, repo, ups_rem, ac_br):
@@ -122,7 +125,7 @@ async def _(e):
     async with UPDATE_LOCK:
         mode = e.pattern_match.group(1)
         opt = e.pattern_match.group(2)
-        is_deploy = is_now = False
+        is_deploy = is_now = force_update = False
         if mode in ["deploy", "push", "all"]:
             is_deploy = True
         if mode in ["now", "pull", "one"]:
@@ -152,6 +155,7 @@ async def _(e):
             repo = Repo.init()
             origin = repo.create_remote("upstream", off_repo)
             origin.fetch()
+            force_update = True
             repo.create_head("main", origin.refs.main)
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
@@ -169,13 +173,15 @@ async def _(e):
             await pushing(Kst, repo, ups_rem, ac_br)
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-        if not changelog:
+        if not (changelog and force_update):
             await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
             return repo.__del__()
-        if not mode:
+        if not (mode and force_update):
             await print_changelogs(Kst, changelog)
             await Kst.reply(help_text, silent=True)
             return
+        if force_update:
+            await Kst.edit("`Force-Syncing to latest stable source code, please wait...`")
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
             await pulling(Kst)
