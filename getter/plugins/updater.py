@@ -69,7 +69,7 @@ async def pulling(Kst, repo, ups_rem, ac_br):
     except GitCommandError:
         repo.git.reset("--hard", "FETCH_HEAD")
     await Runner("pip3 install --no-cache-dir -U -r requirements.txt")
-    _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
+    _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then run `{hl}ping` command."
     await eod(Kst, _)
     with suppress(psu.NoSuchProcess, psu.AccessDenied, psu.ZombieProcess):
         c_p = psu.Process(getpid())
@@ -111,7 +111,7 @@ async def pushing(Kst, repo, ups_rem, ac_br):
     if build.status == "failed":
         await eod(Kst, "`Build Deploy failed, detected some errors...`")
         return
-    _ = f"`[PUSH] Update Successfully, Rebooting...`\nTry check alive by using the `{hl}ping` command after a few minutes."
+    _ = f"`[PUSH] Update Successfully, Rebooting...`\nRun `{hl}ping` command after a few minutes."
     await eod(Kst, _)
 
 
