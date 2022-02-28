@@ -68,7 +68,7 @@ async def pulling(Kst):
         f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then check alive by using the `{hl}ping` command."
     )
     await Runner(
-        "rm -rf -- .github docs README.md LICENSE scripts run.py requirements-dev.txt setup.cfg .editorconfig .deepsource.toml *.env session.py"
+        "rm -rf -- .github docs README.md LICENSE scripts run.py requirements-dev.txt setup.cfg .editorconfig .deepsource.toml session.py"
     )
     await Kst.client.disconnect()
     execl(sys.executable, sys.executable, *sys.argv, environ)
