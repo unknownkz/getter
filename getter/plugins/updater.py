@@ -66,7 +66,7 @@ async def print_changelogs(e, changelog):
 
 async def pulling(e):
     await Runner("git pull -f && pip3 install --no-cache-dir -U -r requirements.txt")
-    _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then run `{hl}ping` command."
+    _ = f"`[PULL] Update Successfully...`\nWait for a few seconds, then run `{hl}ping` command."
     await eod(e, _)
     with suppress(psu.NoSuchProcess, psu.AccessDenied, psu.ZombieProcess):
         c_p = psu.Process(getpid())
@@ -106,7 +106,7 @@ async def pushing(e, repo, ups_rem, ac_br):
     if build.status == "failed":
         await eod(e, "`Build Deploy failed, detected some errors...`")
         return
-    _ = f"`[PUSH] Update Successfully, Rebooting...`\nRun `{hl}ping` command after a few minutes."
+    _ = f"`[PUSH] Update Successfully...`\nWait for a few minutes, then run `{hl}ping` command."
     await eod(e, _)
 
 
@@ -170,7 +170,7 @@ async def _(e):
             return
         changelog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
         if not changelog and not force_now:
-            await Kst.edit(f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]")
+            await eod(Kst, f"`Getter v{__version__}` **up-to-date** [`{ac_br}`]", time=15)
             return repo.__del__()
         if not mode and not force_now:
             await print_changelogs(Kst, changelog)

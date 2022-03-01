@@ -52,7 +52,7 @@ async def _(e):
         ):
             await m.try_delete()
             count += 1
-            await sleep(0.5)
+            await sleep(0.3)
         await e.eor(f"`Purged {count}`", time=2, silent=True)
         return
     with suppress(BaseException):
@@ -76,7 +76,8 @@ async def _(e):
         async for m in e.client.iter_messages(e.chat_id, limit=num, from_user="me"):
             await m.try_delete()
             count += 1
-        await e.eor(f"`Purged {count}`", time=2, silent=True)
+        if count >= 2:
+            await e.eor(f"`Purged {count}`", time=2, silent=True)
         return
     if not (match or e.is_reply):
         await e.eor(f"Reply to a message to purge from or use it like `{hl}purgeme <num>`", time=10)
@@ -96,7 +97,8 @@ async def _(e):
             msgs = []
     if msgs:
         await e.client.delete_messages(chat, msgs)
-    await e.eor(f"`Purged {count}`", time=2, silent=True)
+    if count >= 2:
+        await e.eor(f"`Purged {count}`", time=2, silent=True)
 
 
 @kasta_cmd(disable_errors=True, pattern="ids?")

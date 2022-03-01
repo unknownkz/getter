@@ -21,7 +21,7 @@ def Client() -> TelegramClient:
         if len(Var.STRING_SESSION) != 353:
             LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")
             sys.exit(1)
-        session = StringSession(str(Var.STRING_SESSION))
+        session = StringSession(Var.STRING_SESSION)
     else:
         LOGS.error("STRING_SESSION empty. Please filling! Quitting...")
         sys.exit(1)

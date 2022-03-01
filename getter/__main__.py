@@ -30,9 +30,10 @@ from getter.utils import time_formatter
 
 success_msg = ">> Visit @kastaid for updates !!"
 
-for signame in {"SIGINT", "SIGTERM", "SIGABRT"}:
-    sig = getattr(signal, signame)
-    LOOP.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s.name)))
+if Var.DEV_MODE:
+    LOGS.warning(
+        "\nDEV_MODE config enabled.\nSome codes and functions will not work.\nIf you need to run in production then comment DEV_MODE or change value to False or remove them!"
+    )
 
 
 async def shutdown(signum: str) -> None:
@@ -44,7 +45,17 @@ async def shutdown(signum: str) -> None:
     LOGS.warning("Cancelling outstanding tasks : {}".format(len(tasks)))
     await asyncio.gather(*tasks, return_exceptions=True)
     await LOOP.shutdown_asyncgens()
-    LOOP.stop()
+    if LOOP.is_running():
+        LOOP.stop()
+
+
+def trap() -> None:
+    for signame in {"SIGINT", "SIGTERM", "SIGABRT"}:
+        sig = getattr(signal, signame)
+        LOOP.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s.name)))
+
+
+trap()
 
 
 async def autous() -> None:

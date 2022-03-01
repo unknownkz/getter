@@ -81,7 +81,7 @@ parser.add_argument("-d", "--dev", help="run in development mode", action="store
 parser.add_argument("-w", "--watch", help="run and watch in development mode", action="store_true")
 parser.add_argument("-l", "--lint", help="run linting and format code", action="store_true")
 parser.add_argument("-c", "--clean", help="remove __pycache__", action="store_true")
-parser.add_argument("-v", "--version", help="show this program version", action="version", version="0.0.1")
+parser.add_argument("-v", "--version", help="show this program version", action="version", version="0.3.3")
 parser.add_argument("-h", "--help", help="show this help information", default=SUPPRESS, action="help")
 
 

@@ -107,7 +107,7 @@ getmembers_text = """
 no_process_text = "`There is no running proccess.`"
 cancel_text = "`Requested to cancel the current process...`"
 cancelled_text = """
-❎ **The process has been cancelled.**
+❎ **The process has been cancelled**
 
 **Mode:** `{}`
 **Current:** `{}`

@@ -30,13 +30,13 @@ def tobool(val):
 
 class Var:
     DEV_MODE = tobool(getenv("DEV_MODE", "False"))
-    STRING_SESSION = getenv("STRING_SESSION" "").strip()
-    API_ID = int(getenv("API_ID", "0").strip())
-    API_HASH = getenv("API_HASH", "").strip()
+    STRING_SESSION = str(getenv("STRING_SESSION" "")).strip()
+    API_ID = int(str(getenv("API_ID", "0")).strip())
+    API_HASH = str(getenv("API_HASH", "")).strip()
     HANDLER = getenv("HANDLER", ".")
-    TZ = getenv("TZ", "Asia/Jakarta").strip()
-    HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", "").strip()
-    HEROKU_API = getenv("HEROKU_API", "").strip()
+    TZ = str(getenv("TZ", "Asia/Jakarta")).strip()
+    HEROKU_APP_NAME = str(getenv("HEROKU_APP_NAME", "")).strip()
+    HEROKU_API = str(getenv("HEROKU_API", "")).strip()
 
 
 TZ = timezone(Var.TZ)
