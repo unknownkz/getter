@@ -30,7 +30,7 @@ from . import (
 )
 
 UPDATE_LOCK = Lock()
-off_repo = "https://github.com/kastaid/getter"
+off_repo = "https://github.com/kastaid/getter.git"
 help_text = f"""❯ `{hl}update <now|pull|one> <force|f>`
 Temporary update as locally if available from repo.
 
@@ -40,59 +40,56 @@ Permanently update as heroku, will forced deploy.
 
 
 def gen_chlog(repo, diff):
+    _ = off_repo.replace(".git", "")
     ac_br = repo.active_branch.name
     ch_log = ""
-    ch = f"<b>Getter v{__version__} updates for <a href={off_repo}/tree/{ac_br}>[{ac_br}]</a>:</b>"
+    ch = f"<b>Getter v{__version__} updates for <a href={_}/tree/{ac_br}>[{ac_br}]</a>:</b>"
     d_form = "%d/%m/%Y %H:%M:%S"
     for c in repo.iter_commits(diff):
-        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={off_repo.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
+        ch_log += f"\n\n💬 <b>{c.count()}</b> 🗓 <b>[{c.committed_datetime.strftime(d_form)}]</b>\n<b><a href={_.rstrip('/')}/commit/{c}>[{c.summary}]</a></b> 👨‍💻 <code>{c.author}</code>"
     if ch_log:
         return str(ch + ch_log)
     return ch_log
 
 
-async def print_changelogs(Kst, changelog):
+async def print_changelogs(e, changelog):
     file = "changelog_output.txt"
     if len(changelog) > 4096:
-        await Kst.edit("View the file to see it.")
+        await e.edit("View the file to see it.")
         with open(file, "w+") as f:
             f.write(changelog)
-        await Kst.reply(file=file, silent=True)
+        await e.reply(file=file, silent=True)
         (Root / file).unlink(missing_ok=True)
     else:
-        await Kst.edit(changelog, parse_mode="html")
+        await e.edit(changelog, parse_mode="html")
 
 
-async def pulling(Kst, repo, ups_rem, ac_br):
-    try:
-        ups_rem.pull(ac_br)
-    except GitCommandError:
-        repo.git.reset("--hard", "FETCH_HEAD")
-    await Runner("pip3 install --no-cache-dir -U -r requirements.txt")
+async def pulling(e):
+    await Runner("git pull -f && pip3 install --no-cache-dir -U -r requirements.txt")
     _ = f"`[PULL] Successfully, Rebooting...`\nWait for a few seconds, then run `{hl}ping` command."
-    await eod(Kst, _)
+    await eod(e, _)
     with suppress(psu.NoSuchProcess, psu.AccessDenied, psu.ZombieProcess):
         c_p = psu.Process(getpid())
         [close(h.fd) for h in c_p.open_files() + c_p.connections()]
     execl(sys.executable, sys.executable, "-m", "getter")
-    sys.exit()
+    return
 
 
-async def pushing(Kst, repo, ups_rem, ac_br):
+async def pushing(e, repo, ups_rem, ac_br):
     if not Var.HEROKU_API:
-        await eod(Kst, "Please set `HEROKU_API` in Config Vars.")
+        await eod(e, "Please set `HEROKU_API` in Config Vars.")
         return repo.__del__()
     if not Var.HEROKU_APP_NAME:
-        await eod(Kst, "Please set `HEROKU_APP_NAME` in Config Vars.")
+        await eod(e, "Please set `HEROKU_APP_NAME` in Config Vars.")
         return repo.__del__()
     heroku = from_key(Var.HEROKU_API)
     try:
         heroku_app = heroku.apps()[Var.HEROKU_APP_NAME]
     except KeyError:
-        await eod(Kst, f"`HEROKU_APP_NAME config is invalid! Make sure an app with that name exists.`")
+        await eod(e, f"`HEROKU_APP_NAME config is invalid! Make sure an app with that name exists.`")
         return repo.__del__()
     except Exception as err:
-        await eod(Kst, f"**Updating Deploy error:**\n```{err}```")
+        await eod(e, f"**Updating Deploy error:**\n```{err}```")
         return repo.__del__()
     ups_rem.fetch(ac_br)
     repo.git.reset("--hard", "FETCH_HEAD")
@@ -103,16 +100,14 @@ async def pushing(Kst, repo, ups_rem, ac_br):
         remote.set_url(heroku_remote_url)
     else:
         remote = repo.create_remote("heroku", heroku_remote_url)
-    try:
+    with suppress(BaseException):
         remote.push(refspec="HEAD:refs/heads/main", force=True)
-    except BaseException:
-        pass
     build = heroku_app.builds(order_by="created_at", sort="desc")[0]
     if build.status == "failed":
-        await eod(Kst, "`Build Deploy failed, detected some errors...`")
+        await eod(e, "`Build Deploy failed, detected some errors...`")
         return
     _ = f"`[PUSH] Update Successfully, Rebooting...`\nRun `{hl}ping` command after a few minutes."
-    await eod(Kst, _)
+    await eod(e, _)
 
 
 @kasta_cmd(pattern="update(?: |$)(now|deploy|pull|push|one|all)?(?: |$)(.*)")
@@ -163,10 +158,8 @@ async def _(e):
             repo.heads.main.set_tracking_branch(origin.refs.main)
             repo.heads.main.checkout(True)
         ac_br = repo.active_branch.name
-        try:
+        with suppress(BaseException):
             repo.create_remote("upstream", off_repo)
-        except BaseException:
-            pass
         ups_rem = repo.remote("upstream")
         ups_rem.fetch(ac_br)
         if is_deploy:
@@ -188,7 +181,7 @@ async def _(e):
             await sleep(2)
         if is_now:
             await Kst.edit("`[PULLING] Plase wait...`")
-            await pulling(Kst, repo, ups_rem, ac_br)
+            await pulling(Kst)
         return
 
 

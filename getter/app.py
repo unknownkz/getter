@@ -17,7 +17,6 @@ def Client() -> TelegramClient:
     from getter.config import Var
     from getter.logger import LOGS
 
-    session = ""
     if Var.STRING_SESSION:
         if len(Var.STRING_SESSION) != 353:
             LOGS.error("STRING_SESSION wrong. Copy paste correctly! Quitting...")

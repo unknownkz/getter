@@ -15,14 +15,14 @@ from platform import python_version
 from time import time
 
 StartTime = time()
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 if not sys.platform.startswith("linux"):
-    print("MUST be use Linux platform, currently {}. Quitting...".format(sys.platform))
+    print("You must use Linux platform, currently {}. Quitting...".format(sys.platform))
     sys.exit(1)
 
-if sys.version_info.major < 3 or sys.version_info.minor < 9:
-    print("MUST be use Python version of least 3.9.x currently {}. Quitting...".format(python_version()))
+if sys.version_info < (3, 9, 0):
+    print("You must use at least Python version 3.9.0, currently {}. Quitting...".format(python_version()))
     sys.exit(1)
 
 Root: Path = Path(__file__).parent.parent

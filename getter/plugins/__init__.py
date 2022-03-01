@@ -37,12 +37,3 @@ from getter.utils import (
 from getter.wrappers import eod, eor, eos
 
 hl = HANDLER
-
-
-def _all_plugins():
-    return sorted(
-        [f.stem for f in (Root / "getter/plugins").rglob("*.py") if f.is_file() and not str(f).endswith("__init__.py")]
-    )
-
-
-ALL_PLUGINS = _all_plugins()

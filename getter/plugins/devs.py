@@ -118,7 +118,6 @@ async def _(e):
             c_p = psu.Process(getpid())
             [close(h.fd) for h in c_p.open_files() + c_p.connections()]
         execl(sys.executable, sys.executable, "-m", "getter")
-        sys.exit()
         return
     try:
         Heroku = from_key(Var.HEROKU_API)
